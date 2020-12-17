@@ -218,7 +218,7 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
         'INT': intController.text,
         'WIS': wisController.text,
         'CHA': chaController.text,
-        'ID': size
+        // 'ID': size
       });
   }
 

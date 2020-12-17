@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "608104043594",
+    "firebase_url": "https://myroleplayappserver-default-rtdb.firebaseio.com",
+    "project_id": "myroleplayappserver",
+    "storage_bucket": "myroleplayappserver.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:608104043594:android:788c9ed56c413a550182b3",
+        "android_client_info": {
+          "package_name": "com.example.new_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "608104043594-l0992k9csduoeabj3kv21btj5u6d5naj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjYgW9s6tA63MrG3IKLrxG2dcrOE4i-yo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "608104043594-l0992k9csduoeabj3kv21btj5u6d5naj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -35,16 +35,16 @@ class MyApp extends StatelessWidget {
 class CharactersList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new StreamBuilder(
+    return StreamBuilder(
       stream: FirebaseFirestore.instance.collection('characters').snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (!snapshot.hasData) return new Text('Loading...');
-        return new ListView(
+        if (!snapshot.hasData) return Text('Loading...');
+        return ListView(
           // ignore: deprecated_member_use
           children: snapshot.data.documents.map((document) {
-            return new ListTile(
-              title: new Text(document['name']),
-              subtitle: new Text(document['race']+' '+ document['class']),
+            return ListTile(
+              title: Text(document['name']),
+              subtitle: Text(document['race']+' '+ document['class']),
               onTap: ()=>Navigator.push(context, MaterialPageRoute(
                 builder: (BuildContext context) => MyCharacterScreen(name: document['name'], documentIndex: document['ID']))),
             );
