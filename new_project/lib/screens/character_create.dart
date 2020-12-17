@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:new_project/index.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MyCharacterCreateScreen extends StatefulWidget {
-  MyCharacterCreateScreen({this.listOfNames, this.listCallback});
+  MyCharacterCreateScreen();
   
-  final void Function(String) listCallback;
-  final List listOfNames;
-  
-  
+
   @override
   _MyCharacterCreateScreenState createState() => _MyCharacterCreateScreenState();
 
@@ -33,13 +31,16 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
   final _formKey = GlobalKey<FormState>();
   String dropdownClassValue = 'Bard';
   String dropdownRaceValue = 'Dwarf';
+  final databaseReference = FirebaseFirestore.instance;
 
   RanksCounter ranksCounter = RanksCounter();
-
+  int size;
   int number = 0;
-
   @override
   Widget build(BuildContext context) {
+      databaseReference.collection("characters")
+      .get()
+      .then((res) => size = res.size);
     return  Scaffold(
       appBar: AppBar(
         title: Text('Character creator')
@@ -142,7 +143,7 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
               child: ElevatedButton(
                 onPressed: () {
                   if(!nameController.text.isEmpty){
-                    widget.listCallback(nameController.text);
+                    createRecord(nameController.text, dropdownRaceValue, dropdownClassValue);
                     Navigator.pop(context);
                   }
                 },
@@ -204,4 +205,21 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
             ),
       );
   } 
+
+  void createRecord(String name, race, characterClass) async {
+      await databaseReference.collection("characters")
+      .add({
+        'name': name,
+        'race': race,
+        'class': characterClass,
+        'STR': strController.text,
+        'DEX': dexController.text,
+        'CON': conController.text,
+        'INT': intController.text,
+        'WIS': wisController.text,
+        'CHA': chaController.text,
+        'ID': size
+      });
+  }
+
 }

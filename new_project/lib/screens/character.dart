@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MyCharacterScreen extends StatefulWidget {
-  MyCharacterScreen({this.name});
+  MyCharacterScreen({this.name, this.documentIndex});
   final String name;
+  final int documentIndex;
 
   @override
   _MyCharacterScreenState createState() => _MyCharacterScreenState();
@@ -23,10 +25,7 @@ class _MyCharacterScreenState extends State<MyCharacterScreen> {
 
   TextEditingController chaController = TextEditingController();
 
-
-
   int number = 0;
-
   RanksCounter ranksCounter = RanksCounter(counter: 1,);
   
 
@@ -36,67 +35,73 @@ class _MyCharacterScreenState extends State<MyCharacterScreen> {
       appBar: AppBar(
         title: Text(widget.name ?? ''),
       ),
-      body: ListView(
-        children: [
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 16.0),
-            height: 50,
-            child: Text(
-              'Ability',
-              textAlign: TextAlign.center,
-            )
-          ),
-          Table(
-            border: TableBorder.all(),
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection('characters').snapshots(),
+        builder: (context, snapshot) {
+          if(!snapshot.hasData) return Text('Loading data....');
+          return ListView(
             children: [
-               TableRow(
-                children: [
-                  _tableContainer(Text('Name'), height: 30),
-                  _tableContainer(Text('Score'), height: 30),
-                  _tableContainer(Text('Modify'), height: 30),
-                  _tableContainer(Text('Temp'), height: 30),
-                ]
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 16.0),
+                height: 50,
+                child: Text(
+                  'Ability',
+                  textAlign: TextAlign.center,
+                )
               ),
-              _tableRow('STR', _abilityScore(strController), strController),
-              _tableRow('DEX', _abilityScore(dexController), dexController),
-              _tableRow('CON', _abilityScore(conController), conController),
-              _tableRow('INT', _abilityScore(intController), intController),
-              _tableRow('WIS', _abilityScore(wisController), wisController),
-              _tableRow('CHA', _abilityScore(chaController), chaController),
-            ],
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 16.0),
-            height: 50,
-            child: Text(
-              'Skills',
-              textAlign: TextAlign.center,
-            )
-          ),
-          Table(
-            border: TableBorder.all(),
-            children: [
-               TableRow(
+              Table(
+                border: TableBorder.all(),
                 children: [
-                  _tableContainer(Text('Skill name'), height: 30),
-                  _tableContainer(Text('Total bonus'), height: 30),
-                  _tableContainer(Text('Ability mod'), height: 30),
-                  _tableContainer(Text('Ranks'), height: 30),
-                ]
+                   TableRow(
+                    children: [
+                      _tableContainer(Text('Name'), height: 30),
+                      _tableContainer(Text('Score'), height: 30),
+                      _tableContainer(Text('Modify'), height: 30),
+                      _tableContainer(Text('Temp'), height: 30),
+                    ]
+                  ),
+                  _tableRow('STR', _abilityScore(strController, strController.text = snapshot.data.documents[widget.documentIndex]['STR']), strController),
+                  _tableRow('DEX', _abilityScore(dexController, dexController.text = snapshot.data.documents[widget.documentIndex]['DEX']), dexController),
+                  _tableRow('CON', _abilityScore(conController, conController.text = snapshot.data.documents[widget.documentIndex]['CON']), conController),
+                  _tableRow('INT', _abilityScore(intController, intController.text = snapshot.data.documents[widget.documentIndex]['INT']), intController),
+                  _tableRow('WIS', _abilityScore(wisController, wisController.text = snapshot.data.documents[widget.documentIndex]['WIS']), wisController),
+                  _tableRow('CHA', _abilityScore(chaController, chaController.text = snapshot.data.documents[widget.documentIndex]['CHA']), chaController),
+                ],
               ),
-              _tableRow('Acrobatics', _totalBonus(_modifier(strController.text), ranksCounter.counter), strController, widget: ranksCounter),
-              _tableRow('Appraise', _totalBonus(_modifier(dexController.text),ranksCounter.counter), dexController,),
-              _tableRow('CON', _totalBonus(_modifier(conController.text),number), conController),
-              _tableRow('INT', _totalBonus(_modifier(intController.text),number), intController),
-              _tableRow('WIS', _totalBonus(_modifier(wisController.text),number), wisController),
-              _tableRow('CHA', _totalBonus(_modifier(chaController.text),number), chaController),
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 16.0),
+                height: 50,
+                child: Text(
+                  'Skills',
+                  textAlign: TextAlign.center,
+                )
+              ),
+              Table(
+                border: TableBorder.all(),
+                children: [
+                   TableRow(
+                    children: [
+                      _tableContainer(Text('Skill name'), height: 30),
+                      _tableContainer(Text('Total bonus'), height: 30),
+                      _tableContainer(Text('Ability mod'), height: 30),
+                      _tableContainer(Text('Ranks'), height: 30),
+                    ]
+                  ),
+                  _tableRow('Acrobatics', _totalBonus(_modifier(strController.text), ranksCounter.counter), strController, widget: ranksCounter),
+                  _tableRow('Appraise', _totalBonus(_modifier(dexController.text),ranksCounter.counter), dexController,),
+                  _tableRow('CON', _totalBonus(_modifier(conController.text),number), conController),
+                  _tableRow('INT', _totalBonus(_modifier(intController.text),number), intController),
+                  _tableRow('WIS', _totalBonus(_modifier(wisController.text),number), wisController),
+                  _tableRow('CHA', _totalBonus(_modifier(chaController.text),number), chaController),
+                ],
+              ),
+              RaisedButton(
+                onPressed: () {print(widget.documentIndex);},
+                child: const Text('Applay ranks ', style: TextStyle(fontSize: 20)),
+              )
             ],
-          ),
-          RaisedButton(
-            onPressed: () {},
-            child: const Text('Applay ranks ', style: TextStyle(fontSize: 20)),
-          )
-        ],
+          );
+        }
       ),
     );
   }
@@ -128,20 +133,21 @@ class _MyCharacterScreenState extends State<MyCharacterScreen> {
     return Text((abilityMod+ranks).toString(),);
   }
   
-  Widget _abilityScore(TextEditingController textController){
+  Widget _abilityScore(TextEditingController textController, String text){
     return Container(
           width: 30,
-          child: TextFormField(
-              controller: textController,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                counterText: '',
-              ),
-              onEditingComplete: () => setState((){}),
-              maxLength: 3,
-              keyboardType: TextInputType.number,
-              inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly
+          child: TextField(
+            readOnly: true,
+            controller: textController,
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              counterText: '',
+            ),
+            onEditingComplete: () => setState((){}),
+            maxLength: 3,
+            keyboardType: TextInputType.number,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly
               ],
             ),
       );
@@ -154,8 +160,6 @@ class _MyCharacterScreenState extends State<MyCharacterScreen> {
       child: child,
     );
   }
-
-  
 }
 
 class RanksCounter extends StatefulWidget {
