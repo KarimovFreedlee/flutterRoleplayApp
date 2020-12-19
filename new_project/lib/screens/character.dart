@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class MyCharacterScreen extends StatefulWidget {
   MyCharacterScreen({this.name, this.documentIndex});
   final String name;
-  final int documentIndex;
+  final String documentIndex;
 
   @override
   _MyCharacterScreenState createState() => _MyCharacterScreenState();
@@ -24,10 +24,10 @@ class _MyCharacterScreenState extends State<MyCharacterScreen> {
   TextEditingController wisController = TextEditingController();
 
   TextEditingController chaController = TextEditingController();
-
+  FirebaseFirestore db;
   int number = 0;
+  String str;
   RanksCounter ranksCounter = RanksCounter(counter: 1,);
-  
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,8 @@ class _MyCharacterScreenState extends State<MyCharacterScreen> {
         title: Text(widget.name ?? ''),
       ),
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('characters').snapshots(),
+        // ignore: deprecated_member_use
+        stream: FirebaseFirestore.instance.collection('characters').document(widget.documentIndex).snapshots(),
         builder: (context, snapshot) {
           if(!snapshot.hasData) return Text('Loading data....');
           return ListView(
@@ -60,12 +61,12 @@ class _MyCharacterScreenState extends State<MyCharacterScreen> {
                       _tableContainer(Text('Temp'), height: 30),
                     ]
                   ),
-                  _tableRow('STR', _abilityScore(strController, strController.text = snapshot.data.documents[widget.documentIndex]['STR']), strController),
-                  _tableRow('DEX', _abilityScore(dexController, dexController.text = snapshot.data.documents[widget.documentIndex]['DEX']), dexController),
-                  _tableRow('CON', _abilityScore(conController, conController.text = snapshot.data.documents[widget.documentIndex]['CON']), conController),
-                  _tableRow('INT', _abilityScore(intController, intController.text = snapshot.data.documents[widget.documentIndex]['INT']), intController),
-                  _tableRow('WIS', _abilityScore(wisController, wisController.text = snapshot.data.documents[widget.documentIndex]['WIS']), wisController),
-                  _tableRow('CHA', _abilityScore(chaController, chaController.text = snapshot.data.documents[widget.documentIndex]['CHA']), chaController),
+                  _tableRow('STR', _abilityScore(strController, strController.text = snapshot.data['STR']), strController),
+                  _tableRow('DEX', _abilityScore(dexController, dexController.text = snapshot.data['DEX']), dexController),
+                  _tableRow('CON', _abilityScore(conController, conController.text = snapshot.data['CON']), conController),
+                  _tableRow('INT', _abilityScore(intController, intController.text = snapshot.data['INT']), intController),
+                  _tableRow('WIS', _abilityScore(wisController, wisController.text = snapshot.data['WIS']), wisController),
+                  _tableRow('CHA', _abilityScore(chaController, chaController.text = snapshot.data['CHA']), chaController),
                 ],
               ),
               Container(

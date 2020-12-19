@@ -42,11 +42,13 @@ class CharactersList extends StatelessWidget {
         return ListView(
           // ignore: deprecated_member_use
           children: snapshot.data.documents.map((document) {
+            // ignore: deprecated_member_use
+            var docId=document.documentID;
             return ListTile(
               title: Text(document['name']),
               subtitle: Text(document['race']+' '+ document['class']),
               onTap: ()=>Navigator.push(context, MaterialPageRoute(
-                builder: (BuildContext context) => MyCharacterScreen(name: document['name'], documentIndex: document['ID']))),
+                builder: (BuildContext context) => MyCharacterScreen(name: document['name'], documentIndex: docId))),
             );
           }).toList(),
         );
