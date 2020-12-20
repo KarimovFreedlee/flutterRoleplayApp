@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:new_project/index.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:form_validator/form_validator.dart';
 
 class MyCharacterCreateScreen extends StatefulWidget {
   MyCharacterCreateScreen();
@@ -26,8 +27,7 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
 
   TextEditingController wisController = TextEditingController();
 
-  TextEditingController chaController = TextEditingController();
-  
+  TextEditingController chaController = TextEditingController(); 
   final _formKey = GlobalKey<FormState>();
   String dropdownClassValue = 'Bard';
   String dropdownRaceValue = 'Dwarf';
@@ -38,9 +38,6 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
   int number = 0;
   @override
   Widget build(BuildContext context) {
-      databaseReference.collection("characters")
-      .get()
-      .then((res) => size = res.size);
     return  Scaffold(
       appBar: AppBar(
         title: Text('Character creator')
@@ -54,13 +51,8 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
                 icon: Icon(Icons.person),
                 labelText: 'Character name',
               ),
-              controller: nameController,
-              // validator: (value) {
-              //   if (value.isEmpty) {
-              //     return 'Please enter your character name';
-              //   }
-              //   return null;
-              // },
+              controller: nameController,   
+              validator: ValidationBuilder().minLength(1).maxLength(50).build(),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -142,10 +134,13 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
             Center(
               child: ElevatedButton(
                 onPressed: () {
-                  if(!nameController.text.isEmpty){
+                  String _text = 'Not valid!';
+                  if(_formKey.currentState.validate()){
+                    _text = 'This is valid!';
                     createRecord(nameController.text, dropdownRaceValue, dropdownClassValue);
                     Navigator.pop(context);
                   }
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(_text)));
                 },
                 child: Text('Submit'),
               ),
@@ -192,6 +187,7 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
           width: 30,
           child: TextFormField(
               controller: textController,
+              validator: ValidationBuilder().minLength(1).maxLength(2).build(),
               decoration: InputDecoration(
                 border: InputBorder.none,
                 counterText: '',
@@ -218,7 +214,6 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
         'INT': intController.text,
         'WIS': wisController.text,
         'CHA': chaController.text,
-        // 'ID': size
       });
   }
 
