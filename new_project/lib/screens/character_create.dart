@@ -119,8 +119,8 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
                 children: [
                   _tableContainer(Text('Name'), height: 30),
                   _tableContainer(Text('Score'), height: 30),
-                  _tableContainer(Text('Modify'), height: 30),
-                  _tableContainer(Text(''), height: 30),
+                  // _tableContainer(Text('Modify'), height: 30),
+                  // _tableContainer(Text(''), height: 30),
                 ]
               ),
               _tableRow('STR', _abilityScore(strController), strController),
@@ -156,8 +156,8 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
       children: [
         _tableContainer(Text(title)),
         _tableContainer(_secondColumn),
-        _tableContainer(Text(_modifier(textController.text).toString())), 
-        _tableContainer(widget), 
+        // _tableContainer(Text(_modifier(textController.text).toString())), 
+        // _tableContainer(widget), 
       ]
     );
   }

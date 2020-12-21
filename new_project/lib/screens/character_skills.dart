@@ -14,7 +14,6 @@ class MyCharacterSkillsScreen extends StatefulWidget {
 
 class _MyCharacterSkillsScreenState extends State<MyCharacterSkillsScreen> {
 
-  int number = 0;
   RanksCounter ranksCounter = RanksCounter();
   @override
   Widget build(BuildContext context) {
@@ -45,25 +44,25 @@ class _MyCharacterSkillsScreenState extends State<MyCharacterSkillsScreen> {
                 ),
                 _tableRow('Acrobatics', _totalBonus(_modifier(snapshot.data['DEX']), ranksCounter.counter), snapshot.data['DEX'], widget: ranksCounter),
                 _tableRow('Appraise', _totalBonus(_modifier(snapshot.data['INT']),ranksCounter.counter), snapshot.data['INT'], widget: ranksCounter),
-                _tableRow('Bluff', _totalBonus(_modifier(snapshot.data['CHA']),number), snapshot.data['CHA'], widget: ranksCounter),
-                _tableRow('Climb', _totalBonus(_modifier(snapshot.data['STR']),number), snapshot.data['STR'], widget: ranksCounter),
-                _tableRow('Diplomacy', _totalBonus(_modifier(snapshot.data['CHA']),number), snapshot.data['CHA'], widget: ranksCounter),
-                _tableRow('Disguise', _totalBonus(_modifier(snapshot.data['CHA']),number), snapshot.data['CHA'], widget: ranksCounter),
-                _tableRow('Escape Artist', _totalBonus(_modifier(snapshot.data['DEX']),number), snapshot.data['DEX'], widget: ranksCounter),
-                _tableRow('Fly', _totalBonus(_modifier(snapshot.data['DEX']),number), snapshot.data['DEX'], widget: ranksCounter),
-                _tableRow('Handle Animal*', _totalBonus(_modifier(snapshot.data['CHA']),number), snapshot.data['CHA'], widget: ranksCounter),
-                _tableRow('Heal', _totalBonus(_modifier(snapshot.data['WIS']),number), snapshot.data['WIS'], widget: ranksCounter),
+                _tableRow('Bluff', _totalBonus(_modifier(snapshot.data['CHA']),ranksCounter.counter), snapshot.data['CHA'], widget: ranksCounter),
+                _tableRow('Climb', _totalBonus(_modifier(snapshot.data['STR']),ranksCounter.counter), snapshot.data['STR'], widget: ranksCounter),
+                _tableRow('Diplomacy', _totalBonus(_modifier(snapshot.data['CHA']),ranksCounter.counter), snapshot.data['CHA'], widget: ranksCounter),
+                _tableRow('Disguise', _totalBonus(_modifier(snapshot.data['CHA']),ranksCounter.counter), snapshot.data['CHA'], widget: ranksCounter),
+                _tableRow('Escape Artist', _totalBonus(_modifier(snapshot.data['DEX']),ranksCounter.counter), snapshot.data['DEX'], widget: ranksCounter),
+                _tableRow('Fly', _totalBonus(_modifier(snapshot.data['DEX']),ranksCounter.counter), snapshot.data['DEX'], widget: ranksCounter),
+                _tableRow('Handle Animal*', _totalBonus(_modifier(snapshot.data['CHA']),ranksCounter.counter), snapshot.data['CHA'], widget: ranksCounter),
+                _tableRow('Heal', _totalBonus(_modifier(snapshot.data['WIS']),ranksCounter.counter), snapshot.data['WIS'], widget: ranksCounter),
                 _tableRow('Intimidate', _totalBonus(_modifier(snapshot.data['CHA']), ranksCounter.counter), snapshot.data['CHA'], widget: ranksCounter),
                 _tableRow('Linguistics*', _totalBonus(_modifier(snapshot.data['INT']),ranksCounter.counter), snapshot.data['INT'], widget: ranksCounter),
-                _tableRow('Perception', _totalBonus(_modifier(snapshot.data['WIS']),number), snapshot.data['WIS']),
-                _tableRow('Ride', _totalBonus(_modifier(snapshot.data['DEX']),number), snapshot.data['DEX']),
-                _tableRow('Sense Motive', _totalBonus(_modifier(snapshot.data['WIS']),number), snapshot.data['WIS']),
-                _tableRow('Sleight of Hand*', _totalBonus(_modifier(snapshot.data['DEX']),number), snapshot.data['DEX']),
-                _tableRow('Spellcraft*', _totalBonus(_modifier(snapshot.data['INT']),number), snapshot.data['INT']),
-                _tableRow('Stealth', _totalBonus(_modifier(snapshot.data['DEX']),number), snapshot.data['DEX']),
-                _tableRow('Survival', _totalBonus(_modifier(snapshot.data['WIS']),number), snapshot.data['WIS']),
-                _tableRow('Swim', _totalBonus(_modifier(snapshot.data['STR']),number), snapshot.data['STR']),
-                _tableRow('Use Magic Device*', _totalBonus(_modifier(snapshot.data['CHA']),number), snapshot.data['CHA']),
+                _tableRow('Perception', _totalBonus(_modifier(snapshot.data['WIS']),ranksCounter.counter), snapshot.data['WIS']),
+                _tableRow('Ride', _totalBonus(_modifier(snapshot.data['DEX']),ranksCounter.counter), snapshot.data['DEX']),
+                _tableRow('Sense Motive', _totalBonus(_modifier(snapshot.data['WIS']),ranksCounter.counter), snapshot.data['WIS']),
+                _tableRow('Sleight of Hand*', _totalBonus(_modifier(snapshot.data['DEX']),ranksCounter.counter), snapshot.data['DEX']),
+                _tableRow('Spellcraft*', _totalBonus(_modifier(snapshot.data['INT']),ranksCounter.counter), snapshot.data['INT']),
+                _tableRow('Stealth', _totalBonus(_modifier(snapshot.data['DEX']),ranksCounter.counter), snapshot.data['DEX']),
+                _tableRow('Survival', _totalBonus(_modifier(snapshot.data['WIS']),ranksCounter.counter), snapshot.data['WIS']),
+                _tableRow('Swim', _totalBonus(_modifier(snapshot.data['STR']),ranksCounter.counter), snapshot.data['STR']),
+                _tableRow('Use Magic Device*', _totalBonus(_modifier(snapshot.data['CHA']),ranksCounter.counter), snapshot.data['CHA']),
               ],
             ),
             RaisedButton(
@@ -112,7 +111,7 @@ class _MyCharacterSkillsScreenState extends State<MyCharacterSkillsScreen> {
   }
 
   void applayRanks(){
-
+    
   }
 }
 

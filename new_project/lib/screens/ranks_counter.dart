@@ -9,8 +9,6 @@ class RanksCounter extends StatefulWidget {
 
 class _RanksCounterState extends State<RanksCounter> {
   
-
-
   @override
   Widget build(BuildContext context) {
     return Column(

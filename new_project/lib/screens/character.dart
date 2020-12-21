@@ -36,6 +36,7 @@ class _MyCharacterScreenState extends State<MyCharacterScreen> {
     _widgetOptions = <Widget>[
       MyCharacterAbilitiesScreen(documentIndex: widget.documentIndex,),
       MyCharacterSkillsScreen(documentIndex: widget.documentIndex),
+      MycharacterInformationScreen(documentIndex: widget.documentIndex)
     ];
     super.initState();
   }
@@ -45,7 +46,7 @@ class _MyCharacterScreenState extends State<MyCharacterScreen> {
       _selectedIndex = index;
     });
   }
-  // RanksCounter ranksCounter = RanksCounter(counter: 1,);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
