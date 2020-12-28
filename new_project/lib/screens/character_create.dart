@@ -16,26 +16,26 @@ class MyCharacterCreateScreen extends StatefulWidget {
 class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
   
   TextEditingController nameController = TextEditingController();
-
   TextEditingController strController = TextEditingController();
-
   TextEditingController dexController = TextEditingController();
-
   TextEditingController conController = TextEditingController();
-
   TextEditingController intController = TextEditingController();
-
   TextEditingController wisController = TextEditingController();
-
   TextEditingController chaController = TextEditingController(); 
+
+  TextEditingController racialStr = TextEditingController();
+  TextEditingController racialDex = TextEditingController();
+  TextEditingController racialCon = TextEditingController();
+  TextEditingController racialInt = TextEditingController();
+  TextEditingController racialWis = TextEditingController();
+  TextEditingController racialCha = TextEditingController(); 
+  
   final _formKey = GlobalKey<FormState>();
   String dropdownClassValue = 'Bard';
   String dropdownRaceValue = 'Dwarf';
   final databaseReference = FirebaseFirestore.instance;
 
   RanksCounter ranksCounter = RanksCounter();
-  int size;
-  int number = 0;
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
@@ -52,7 +52,7 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
                 labelText: 'Character name',
               ),
               controller: nameController,   
-              validator: ValidationBuilder().minLength(1).maxLength(50).build(),
+              validator: ValidationBuilder().minLength(1).build(),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -73,7 +73,7 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
                       dropdownRaceValue = newValue;
                     });
                   },
-                  items: <String>['Dwarf', 'Elf', 'Gnome', 'Half Elf','Half Orc','Hafling', 'Human']
+                  items: <String>['Dwarf', 'Elf', 'Gnome', 'Half Elf','Half Orc','Halfling', 'Human']
                       .map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
@@ -119,28 +119,23 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
                 children: [
                   _tableContainer(Text('Name'), height: 30),
                   _tableContainer(Text('Score'), height: 30),
-                  // _tableContainer(Text('Modify'), height: 30),
-                  // _tableContainer(Text(''), height: 30),
+                  _tableContainer(Text('Racial abilities'), height: 30),
                 ]
               ),
-              _tableRow('STR', _abilityScore(strController), strController),
-              _tableRow('DEX', _abilityScore(dexController), dexController),
-              _tableRow('CON', _abilityScore(conController), conController),
-              _tableRow('INT', _abilityScore(intController), intController),
-              _tableRow('WIS', _abilityScore(wisController), wisController),
-              _tableRow('CHA', _abilityScore(chaController), chaController),
+              _tableRow('STR', _abilityScore(strController), strController, racialAbilities('STR')),
+              _tableRow('DEX', _abilityScore(dexController), dexController, racialAbilities('DEX')),
+              _tableRow('CON', _abilityScore(conController), conController, racialAbilities('CON')),
+              _tableRow('INT', _abilityScore(intController), intController, racialAbilities('INT')),
+              _tableRow('WIS', _abilityScore(wisController), wisController, racialAbilities('WIS')),
+              _tableRow('CHA', _abilityScore(chaController), chaController, racialAbilities('CHA')),
               ],
             ),
             Center(
               child: ElevatedButton(
                 onPressed: () {
-                  String _text = 'Not valid!';
                   if(_formKey.currentState.validate()){
-                    _text = 'This is valid!';
-                    createRecord(nameController.text, dropdownRaceValue, dropdownClassValue);
-                    Navigator.pop(context);
+                    alert();
                   }
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(_text)));
                 },
                 child: Text('Submit'),
               ),
@@ -151,13 +146,12 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
     );
   }
 
-  TableRow _tableRow(String title, Widget _secondColumn, TextEditingController textController, {Widget widget}){
+  TableRow _tableRow(String title, Widget _secondColumn, TextEditingController textController, Widget widget){
     return TableRow(
       children: [
         _tableContainer(Text(title)),
-        _tableContainer(_secondColumn),
-        // _tableContainer(Text(_modifier(textController.text).toString())), 
-        // _tableContainer(widget), 
+        _tableContainer(_secondColumn), 
+        _tableContainer(widget), 
       ]
     );
   }
@@ -170,30 +164,18 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
     );
   }
 
-   int _modifier (String val){
-    if(val == null || val.isEmpty){
-      return 0;
-    }
-    var value = int.parse(val);
-    if(value % 2 == 0){
-      return (value - 10)~/2;
-    } else{
-      return (value - 11)~/2;
-    }
-  }
-
   Widget _abilityScore(TextEditingController textController){
     return Container(
           width: 30,
           child: TextFormField(
               controller: textController,
-              validator: ValidationBuilder().minLength(1).maxLength(2).build(),
+              validator: ValidationBuilder().minLength(1).build(),
               decoration: InputDecoration(
                 border: InputBorder.none,
                 counterText: '',
               ),
               onEditingComplete: () => setState((){}),
-              maxLength: 3,
+              maxLength: 2,
               keyboardType: TextInputType.number,
               inputFormatters: [
                 FilteringTextInputFormatter.digitsOnly
@@ -202,19 +184,153 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
       );
   } 
 
+  Widget racialAbilityScore(TextEditingController textController, String text){
+    textController.text = text;
+    return Container(
+      width: 30,
+      child: TextField(
+        readOnly: true,
+        controller: textController,
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          counterText: '',
+        ),
+      ),
+    );
+  }
+
+  Widget racialAbilities(String ability){
+    switch(dropdownRaceValue) { 
+      case 'Dwarf': { 
+        switch (ability) {
+          case 'CON':
+            return  racialAbilityScore(racialCon, '+2');
+            break;
+          case 'WIS':
+            return  racialAbilityScore(racialWis, '+2');
+            break;
+          case 'CHA':
+            return  racialAbilityScore(racialCha, '-2');
+            break;
+          default :
+            return Text('');
+          break;
+        }
+      } 
+      break;
+      case 'Elf':
+        switch (ability) {
+          case 'DEX':
+            return  racialAbilityScore(racialDex, '+2');
+            break;
+          case 'INT':
+            return  racialAbilityScore(racialInt, '+2');
+            break;
+          case 'CON':
+            return  racialAbilityScore(racialCon, '-2');
+            break;
+          default :
+            return Text('');
+          break;
+        }
+      break;
+      case 'Gnome': { 
+        switch (ability) {
+          case 'CON': 
+            return  racialAbilityScore(racialCon, '+2');
+            break;
+          case 'CHA':
+            return  racialAbilityScore(racialCha,'+2');
+            break;
+          case 'STR':
+            return  racialAbilityScore(racialStr, '-2');
+            break;
+          default :
+            return Text('');
+          break;
+          }
+        } 
+      break;
+      case 'Halfling': { 
+        switch (ability) {
+          case 'DEX': 
+            return  racialAbilityScore(racialDex, '+2');
+            break;
+          case 'CHA':
+            return  racialAbilityScore(racialCha, '+2');
+            break;
+          case 'STR':
+            return  racialAbilityScore(racialStr, '-2');
+            break;
+          default :
+            return Text('');
+          break;
+        }
+      } 
+      break;
+      default:
+        return Text('');
+        break;
+    }
+  }
+
+  Future<void> alert(){
+    return showDialog<void>(
+    context: context,
+    barrierDismissible: false, // user must tap button!
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Crerate character'),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              Text('This will create character.'),
+              Text('Are you sure you want to create this character?'),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Accept'),
+            onPressed: () {
+              createRecord(nameController.text, dropdownRaceValue, dropdownClassValue);
+              Navigator.of(context).pop();
+              Navigator.pop(context);
+            },
+          ),
+          TextButton(
+            child: Text('Cancel'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
+  }
+
   void createRecord(String name, race, characterClass) async {
       await databaseReference.collection("characters")
       .add({
         'name': name,
         'race': race,
+        'Lvl': '1',
         'class': characterClass,
-        'STR': strController.text,
-        'DEX': dexController.text,
-        'CON': conController.text,
-        'INT': intController.text,
-        'WIS': wisController.text,
-        'CHA': chaController.text,
+        'STR': stringSum(strController.text, racialStr.text),
+        'DEX': stringSum(dexController.text, racialDex.text),
+        'CON': stringSum(conController.text, racialCon.text),
+        'INT': stringSum(intController.text, racialInt.text),
+        'WIS': stringSum(wisController.text, racialWis.text),
+        'CHA': stringSum(chaController.text, racialCha.text),
       });
   }
-
+  
+  String stringSum(String stringOne, String stringTwo){
+    if(stringTwo == null || stringTwo == '')
+    {
+      return stringOne;
+    }
+    return (int.parse(stringOne ?? '0')+int.parse(stringTwo ?? '0')).toString();
+  }
 }

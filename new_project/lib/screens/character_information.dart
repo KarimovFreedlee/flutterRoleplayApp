@@ -13,12 +13,43 @@ class _MycharacterInformationScreenState extends State<MycharacterInformationScr
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: FirebaseFirestore.instance.collection('characters').document(widget.documentIndex).snapshots(),,
+      stream: FirebaseFirestore.instance.collection('characters').document(widget.documentIndex).snapshots(),
       builder: (context, snapshot) {
         if(!snapshot.hasData) return Text('Loading data....');
         return ListView(
           children: [
-            Text('Info'),
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 16.0),
+              height: 50,
+              child: Text(
+                'Info',
+                textAlign: TextAlign.center,
+              )
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text('AC: '+ '${10+_modifier(snapshot.data['DEX'])}'),
+                Text('Initiative: '+ '${_modifier(snapshot.data['DEX'])}')
+              ],
+            ),
+            ButtonBar(
+              alignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    alert();
+                  },
+                  child: Text('Delete character', style: TextStyle(fontSize: 20)
+                  ),
+                ),
+                RaisedButton(
+                  onPressed: null,
+                  child: Text('Edit character', style: TextStyle(fontSize: 20)
+                  ),
+                ),
+              ],
+            ),
           ],
         );
       }
@@ -52,5 +83,45 @@ class _MycharacterInformationScreenState extends State<MycharacterInformationScr
     } else{
       return (value - 11)~/2;
     }
+  }
+
+  Future<void> alert(){
+    return showDialog<void>(
+    context: context,
+    barrierDismissible: false, // user must tap button!
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Delete character'),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              Text('This will delete character.'),
+              Text('Are you sure you want to delete this character?'),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Accept'),
+            onPressed: () {
+              deleteCharacter();
+              Navigator.of(context).pop();
+              Navigator.pop(context);
+            },
+          ),
+          TextButton(
+            child: Text('Cancel'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
+  }
+  
+  void deleteCharacter() async{
+    await FirebaseFirestore.instance.collection('characters').document(widget.documentIndex).delete();
   }
 }

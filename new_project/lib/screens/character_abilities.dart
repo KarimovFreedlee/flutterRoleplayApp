@@ -98,13 +98,7 @@ class _MyCharacterAbilitiesScreenState extends State<MyCharacterAbilitiesScreen>
               border: InputBorder.none,
               counterText: '',
             ),
-            onEditingComplete: () => setState((){}),
-            maxLength: 3,
-            keyboardType: TextInputType.number,
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly
-              ],
-            ),
+          ),
       );
   }
 
@@ -115,4 +109,5 @@ class _MyCharacterAbilitiesScreenState extends State<MyCharacterAbilitiesScreen>
       child: child,
     );
   }
+
 }
