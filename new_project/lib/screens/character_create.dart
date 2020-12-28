@@ -35,7 +35,50 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
   String dropdownRaceValue = 'Dwarf';
   final databaseReference = FirebaseFirestore.instance;
 
+  String _radioValue;
+
+  void _handleRadioValueChange(String value) {
+    setState(() {
+      _radioValue = value;
+      _cleanRacialControllers();
+      switch (value) {
+        case 'STR':
+          return  racialStr.text = '+2';
+          break;
+        case 'DEX':
+          return  racialDex.text = '+2';
+          break;
+        case 'CON':
+          return  racialCon.text = '+2';
+          break;
+        case 'INT':
+          return  racialInt.text = '+2';
+          break;
+        case 'WIS':
+          return  racialWis.text = '+2';
+          break;
+        case 'CHA':
+          return  racialCha.text = '+2';
+          break;
+        default :
+          return Text('');
+        break;
+      }
+    });
+    print(racialStr.text);
+  }
+
+ void _cleanRacialControllers(){
+   racialStr.text = '';
+   racialDex.text = '';
+   racialCon.text = '';
+   racialInt.text = '';
+   racialWis.text = '';
+   racialCha.text = '';
+ }
+
   RanksCounter ranksCounter = RanksCounter();
+
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
@@ -69,6 +112,7 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
                     color: Colors.grey,
                   ),
                   onChanged: (String newValue) {
+                    _cleanRacialControllers();
                     setState(() {
                       dropdownRaceValue = newValue;
                     });
@@ -133,6 +177,7 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
             Center(
               child: ElevatedButton(
                 onPressed: () {
+                  print(racialStr.text);
                   if(_formKey.currentState.validate()){
                     alert();
                   }
@@ -269,9 +314,23 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
       } 
       break;
       default:
-        return Text('');
-        break;
+        return abilityRadio(ability);
+      break;  
     }
+  }
+
+  Widget abilityRadio(String ability){
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text('+2'),
+        Radio(
+          value: ability,
+          groupValue: _radioValue,
+          onChanged: _handleRadioValueChange,
+        ),
+      ],
+    );
   }
 
   Future<void> alert(){

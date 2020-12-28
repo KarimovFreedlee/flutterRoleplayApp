@@ -104,9 +104,9 @@ class _MycharacterInformationScreenState extends State<MycharacterInformationScr
           TextButton(
             child: Text('Accept'),
             onPressed: () {
-              deleteCharacter();
               Navigator.of(context).pop();
               Navigator.pop(context);
+              deleteCharacter();
             },
           ),
           TextButton(
