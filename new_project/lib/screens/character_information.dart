@@ -30,7 +30,8 @@ class _MycharacterInformationScreenState extends State<MycharacterInformationScr
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Text('AC: '+ '${10+_modifier(snapshot.data['DEX'])}'),
-                Text('Initiative: '+ '${_modifier(snapshot.data['DEX'])}')
+                Text('Initiative: '+ '${_modifier(snapshot.data['DEX'])}'),
+                Text('HP: '+ '${snapshot.data['HP']}')
               ],
             ),
             ButtonBar(
@@ -53,23 +54,6 @@ class _MycharacterInformationScreenState extends State<MycharacterInformationScr
           ],
         );
       }
-    );
-  }
-
-  TableRow _tableRow(String title, Widget _secondColumn, TextEditingController textController, {Widget widget}){
-    return TableRow(
-      children: [
-        _tableContainer(Text(title)),
-        _tableContainer(_secondColumn), 
-      ]
-    );
-  }
-
-  Widget _tableContainer(Widget child, {double height = 100,}){
-    return Container(
-      height: height,
-      alignment: Alignment.center,
-      child: child,
     );
   }
 

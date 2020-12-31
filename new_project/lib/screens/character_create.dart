@@ -31,8 +31,15 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
   TextEditingController racialCha = TextEditingController(); 
   
   final _formKey = GlobalKey<FormState>();
+  
   String dropdownClassValue = 'Bard';
   String dropdownRaceValue = 'Dwarf';
+
+  List<String> classes = ['Bard', 'Barbarian', 'Cleric', 'Druid','Fighter','Monk', 'Paladin', 'Ranger', 'Rogue', 'Sorcerer', 'Wizard'];
+  List<String> races = ['Dwarf', 'Elf', 'Gnome', 'Half Elf','Half Orc','Halfling', 'Human'];
+
+  var _characterClass = Map();
+
   final databaseReference = FirebaseFirestore.instance;
 
   String _radioValue;
@@ -85,107 +92,116 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
       appBar: AppBar(
         title: Text('Character creator')
       ),
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          children: <Widget>[
-            TextFormField(
-              decoration: InputDecoration(
-                icon: Icon(Icons.person),
-                labelText: 'Character name',
+      body: GestureDetector(
+        onTap: () {
+          FocusScopeNode currentFocus = FocusScope.of(context);
+
+          if (!currentFocus.hasPrimaryFocus) {
+            currentFocus.unfocus();
+          }
+        },
+          child: Form(
+          key: _formKey,
+          child: ListView(
+            children: <Widget>[
+              TextFormField(
+                decoration: InputDecoration(
+                  icon: Icon(Icons.person),
+                  labelText: 'Character name',
+                ),
+                controller: nameController,   
+                validator: ValidationBuilder().minLength(1).build(),
               ),
-              controller: nameController,   
-              validator: ValidationBuilder().minLength(1).build(),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children:[
-                Text('Race:'),
-                  DropdownButton<String>(
-                  value: dropdownRaceValue,
-                  icon: Icon(Icons.arrow_downward),
-                  iconSize: 24,
-                  elevation: 16,
-                  style: TextStyle(color: Colors.grey),
-                  underline: Container(
-                    height: 2,
-                    color: Colors.grey,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children:[
+                  Text('Race:'),
+                    DropdownButton<String>(
+                    value: dropdownRaceValue,
+                    icon: Icon(Icons.arrow_downward),
+                    iconSize: 24,
+                    elevation: 16,
+                    style: TextStyle(color: Colors.grey),
+                    underline: Container(
+                      height: 2,
+                      color: Colors.grey,
+                    ),
+                    onChanged: (String newValue) {
+                      _cleanRacialControllers();
+                      setState(() {
+                        dropdownRaceValue = newValue;
+                      });
+                    },
+                    items: races
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList()
                   ),
-                  onChanged: (String newValue) {
-                    _cleanRacialControllers();
-                    setState(() {
-                      dropdownRaceValue = newValue;
-                    });
-                  },
-                  items: <String>['Dwarf', 'Elf', 'Gnome', 'Half Elf','Half Orc','Halfling', 'Human']
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList()
-                ),
-              ]
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children:[
-                Text('Class:'),
-                  DropdownButton<String>(
-                  value: dropdownClassValue,
-                  icon: Icon(Icons.arrow_downward),
-                  iconSize: 24,
-                  elevation: 16,
-                  style: TextStyle(color: Colors.grey),
-                  underline: Container(
-                    height: 2,
-                    color: Colors.grey,
-                  ),
-                  onChanged: (String newValue) {
-                    setState(() {
-                      dropdownClassValue = newValue;
-                    });
-                  },
-                  items: <String>['Bard', 'Barbarian', 'Cleric', 'Druid','Fighter','Monk', 'Paladin', 'Ranger', 'Rogue', 'Sorcerer', 'Wizard']
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList()
-                ),
-              ]
-            ),
-            Table(
-              border: TableBorder.all(),
-              children: [
-               TableRow(
-                children: [
-                  _tableContainer(Text('Name'), height: 30),
-                  _tableContainer(Text('Score'), height: 30),
-                  _tableContainer(Text('Racial abilities'), height: 30),
                 ]
               ),
-              _tableRow('STR', _abilityScore(strController), strController, racialAbilities('STR')),
-              _tableRow('DEX', _abilityScore(dexController), dexController, racialAbilities('DEX')),
-              _tableRow('CON', _abilityScore(conController), conController, racialAbilities('CON')),
-              _tableRow('INT', _abilityScore(intController), intController, racialAbilities('INT')),
-              _tableRow('WIS', _abilityScore(wisController), wisController, racialAbilities('WIS')),
-              _tableRow('CHA', _abilityScore(chaController), chaController, racialAbilities('CHA')),
-              ],
-            ),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  print(racialStr.text);
-                  if(_formKey.currentState.validate()){
-                    alert();
-                  }
-                },
-                child: Text('Submit'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children:[
+                  Text('Class:'),
+                    DropdownButton<String>(
+                    value: dropdownClassValue,
+                    icon: Icon(Icons.arrow_downward),
+                    iconSize: 24,
+                    elevation: 16,
+                    style: TextStyle(color: Colors.grey),
+                    underline: Container(
+                      height: 2,
+                      color: Colors.grey,
+                    ),
+                    onChanged: (String newValue) {
+                      setState(() {
+                        dropdownClassValue = newValue;
+                      });
+                    },
+                    items: classes
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList()
+                  ),
+                ]
               ),
-            ),
-          ],
+              Table(
+                border: TableBorder.all(),
+                children: [
+                 TableRow(
+                  children: [
+                    _tableContainer(Text('Name'), height: 30),
+                    _tableContainer(Text('Score'), height: 30),
+                    _tableContainer(Text('Racial abilities'), height: 30),
+                  ]
+                ),
+                _tableRow('STR', _abilityScore(strController), strController, racialAbilities('STR')),
+                _tableRow('DEX', _abilityScore(dexController), dexController, racialAbilities('DEX')),
+                _tableRow('CON', _abilityScore(conController), conController, racialAbilities('CON')),
+                _tableRow('INT', _abilityScore(intController), intController, racialAbilities('INT')),
+                _tableRow('WIS', _abilityScore(wisController), wisController, racialAbilities('WIS')),
+                _tableRow('CHA', _abilityScore(chaController), chaController, racialAbilities('CHA')),
+                ],
+              ),
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    print(racialStr.text);
+                    if(_formKey.currentState.validate()){
+                      alert();
+                    }
+                  },
+                  child: Text('Submit'),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -213,19 +229,19 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
     return Container(
           width: 30,
           child: TextFormField(
-              controller: textController,
-              validator: ValidationBuilder().minLength(1).build(),
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                counterText: '',
-              ),
-              onEditingComplete: () => setState((){}),
-              maxLength: 2,
-              keyboardType: TextInputType.number,
-              inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly
-              ],
+            controller: textController,
+            validator: ValidationBuilder().minLength(1).build(),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              counterText: '',
             ),
+            onEditingComplete:() => FocusScope.of(context).nextFocus(),
+            maxLength: 2,
+            keyboardType: TextInputType.number,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly
+            ],
+          ),
       );
   } 
 
@@ -352,6 +368,7 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
           TextButton(
             child: Text('Accept'),
             onPressed: () {
+              characterClass(dropdownClassValue);
               createRecord(nameController.text, dropdownRaceValue, dropdownClassValue);
               Navigator.of(context).pop();
               Navigator.pop(context);
@@ -369,13 +386,62 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
   );
   }
 
+  void characterClass(String className){
+    switch(className){
+      case 'Bard':
+        _characterClass = characterClassCreater(8,6);
+      break;
+      case 'Barbarian':
+        _characterClass = characterClassCreater(12,4);
+      break;
+      case 'Cleric':
+        _characterClass = characterClassCreater(8,2);
+      break;
+      case 'Druid':
+        _characterClass = characterClassCreater(8,4);
+      break;
+      case 'Fighter':
+        _characterClass = characterClassCreater(10,2);
+      break;
+      case 'Monk':
+        _characterClass = characterClassCreater(10,4);
+      break;
+      case 'Paladin':
+        _characterClass = characterClassCreater(10,2);
+      break;
+      case 'Ranger':
+        _characterClass = characterClassCreater(10,6);
+      break;
+      case 'Rouge':
+        _characterClass = characterClassCreater(8,8);
+      break;
+      case 'Sorcerer':
+        _characterClass = characterClassCreater(6,2);
+      break;
+      case 'Wizard':
+        _characterClass = characterClassCreater(6,2);
+      break;
+    }
+    return null;
+  }
+
+
+  Map characterClassCreater(int hp, skillRanks){
+    return {
+      'hp' : hp,
+      'skillRanks' : _modifier(intController.text)+skillRanks
+    };
+  }
+
   void createRecord(String name, race, characterClass) async {
       await databaseReference.collection("characters")
       .add({
         'name': name,
         'race': race,
-        'Lvl': '1',
+        'Lvl': 1,
         'class': characterClass,
+        'HP': _characterClass['hp'],
+        'SKILL_RANKS': _characterClass['skillRanks'],
         'STR': stringSum(strController.text, racialStr.text),
         'DEX': stringSum(dexController.text, racialDex.text),
         'CON': stringSum(conController.text, racialCon.text),
@@ -385,6 +451,18 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
       });
   }
   
+  int _modifier (String val){
+  if(val == null || val.isEmpty){
+    return 0;
+  }
+  var value = int.parse(val);
+  if(value % 2 == 0){
+    return (value - 10)~/2;
+  } else{
+    return (value - 11)~/2;
+  }
+}
+
   String stringSum(String stringOne, String stringTwo){
     if(stringTwo == null || stringTwo == '')
     {

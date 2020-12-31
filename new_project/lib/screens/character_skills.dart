@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:new_project/index.dart';
 
 class MyCharacterSkillsScreen extends StatefulWidget {
@@ -13,22 +12,38 @@ class MyCharacterSkillsScreen extends StatefulWidget {
 }
 
 class _MyCharacterSkillsScreenState extends State<MyCharacterSkillsScreen> {
+  
+  FirebaseFirestore db = FirebaseFirestore.instance;
+  int availableRanks;
 
-  RanksCounter ranksCounter = RanksCounter();
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: FirebaseFirestore.instance.collection('characters').document(widget.documentIndex).snapshots(),
+      stream: db.collection('characters').doc(widget.documentIndex).snapshots(),
       builder: (context, snapshot) {
         if(!snapshot.hasData) return Text('Loading data....');
+
+        availableRanks = snapshot.data['SKILL_RANKS'];
+        
+        RanksCounter ranksCounter = RanksCounter(maxCounterValue:snapshot.data['Lvl'],callback: callback,availableRanks: availableRanks,);
         return ListView(
           children: [
             Container(
               padding: EdgeInsets.symmetric(vertical: 16.0),
               height: 50,
-              child: Text(
-                'Skills',
-                textAlign: TextAlign.center,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Text(
+                    'Skill Points:',
+                    textAlign: TextAlign.center,
+                  ),
+                  Text(
+                    '$availableRanks',
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               )
             ),
             Table(
@@ -110,8 +125,15 @@ class _MyCharacterSkillsScreenState extends State<MyCharacterSkillsScreen> {
     );
   }
 
+  void callback() {
+    if(availableRanks != 0){
+      availableRanks --;
+      print(availableRanks);
+    }
+  }
+
   void applayRanks(){
-    
+    db.collection('characters').doc(widget.documentIndex).update({'SKILL_RANKS': availableRanks});
   }
 }
 
