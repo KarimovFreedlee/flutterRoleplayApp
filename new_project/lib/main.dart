@@ -16,14 +16,21 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          brightness: Brightness.dark,
+          primaryColor: Colors.orange[200],
+          accentColor: Color(0xff3f2318),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              primary: Color(0xffefda91),
+            ),
+          ),
         ),
         home: StreamBuilder(
           stream: FirebaseFirestore.instance.collection('characters').snapshots(),
           builder: (context, snapshot) {
             if(!snapshot.hasData) return Text('loading data');
             return MyListOfCharactersScreen(
-              title: 'Flutter Demo Home Page',
+              title: 'Pathfinder characters list',
               charactersListView: new CharactersList(),
               );
           }
@@ -33,6 +40,19 @@ class MyApp extends StatelessWidget {
 }
 
 class CharactersList extends StatelessWidget {
+
+  int _modifier (String val){
+    if(val == null || val.isEmpty){
+      return 0;
+    }
+    var value = int.parse(val);
+    if(value % 2 == 0){
+      return (value - 10)~/2;
+    } else{
+      return (value - 11)~/2;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -44,11 +64,37 @@ class CharactersList extends StatelessWidget {
           children: snapshot.data.documents.map((document) {
             // ignore: deprecated_member_use
             var docId=document.documentID;
-            return ListTile(
-              title: Text(document['name']),
-              subtitle: Text(document['race']+' '+ document['class']),
-              onTap: ()=>Navigator.push(context, MaterialPageRoute(
-                builder: (BuildContext context) => MyCharacterScreen(name: document['name'], documentIndex: docId))),
+            return Padding(
+              padding: const EdgeInsets.all(3.0),
+              child: Card(
+                color: Color(0xff3a1f14),
+                shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0),
+                ),
+                child: Column(
+                  children: [
+                    Center(child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text(document['name']+' - '+document['race']+' '+ document['class']),
+                        Text('Lvl: '+'${document['Lvl']}')
+                      ],
+                    )),
+                    ListTile(
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Text('HP: ${document['HP']}'),
+                          Text('AC: ${10+_modifier(document['DEX'])}'),
+                          Text('Initiative: ${_modifier(document['DEX'])}')
+                        ],
+                      ),
+                      onTap: ()=>Navigator.push(context, MaterialPageRoute(
+                        builder: (BuildContext context) => MyCharacterScreen(name: document['name'], documentIndex: docId))),
+                    ),
+                  ],
+                ),
+              ),
             );
           }).toList(),
         );

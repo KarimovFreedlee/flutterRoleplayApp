@@ -35,7 +35,7 @@ class _MyCharacterScreenState extends State<MyCharacterScreen> {
   initState(){
     _widgetOptions = <Widget>[
       MyCharacterAbilitiesScreen(documentIndex: widget.documentIndex,),
-      MyCharacterSkillsScreen(documentIndex: widget.documentIndex),
+      MyCharacterSkillsScreen(documentIndex: widget.documentIndex,),
       MycharacterInformationScreen(documentIndex: widget.documentIndex)
     ];
     super.initState();
@@ -77,7 +77,7 @@ class _MyCharacterScreenState extends State<MyCharacterScreen> {
         ),
       ],
       currentIndex: _selectedIndex,
-      selectedItemColor: Colors.blue,
+      selectedItemColor: Theme.of(context).primaryColor,
       onTap: _onItemTapped,
     ),
     );

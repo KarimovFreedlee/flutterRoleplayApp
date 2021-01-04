@@ -42,7 +42,6 @@ class _MyCharacterAbilitiesScreenState extends State<MyCharacterAbilitiesScreen>
               )
             ),
             Table(
-              border: TableBorder.all(),
               children: [
                   TableRow(
                   children: [
@@ -103,10 +102,12 @@ class _MyCharacterAbilitiesScreenState extends State<MyCharacterAbilitiesScreen>
   }
 
   Widget _tableContainer(Widget child, {double height = 100,}){
-    return Container(
-      height: height,
-      alignment: Alignment.center,
-      child: child,
+    return Card(
+        child: Container(
+        height: height,
+        alignment: Alignment.center,
+        child: child,
+      ),
     );
   }
 

@@ -7,13 +7,14 @@ class MycharacterInformationScreen extends StatefulWidget {
   const MycharacterInformationScreen({Key key, this.documentIndex}) : super(key: key);
   @override
   _MycharacterInformationScreenState createState() => _MycharacterInformationScreenState();
+
 }
 
 class _MycharacterInformationScreenState extends State<MycharacterInformationScreen> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: FirebaseFirestore.instance.collection('characters').document(widget.documentIndex).snapshots(),
+      stream: FirebaseFirestore.instance.collection('characters').doc(widget.documentIndex).snapshots(),
       builder: (context, snapshot) {
         if(!snapshot.hasData) return Text('Loading data....');
         return ListView(
@@ -33,6 +34,22 @@ class _MycharacterInformationScreenState extends State<MycharacterInformationScr
                 Text('Initiative: '+ '${_modifier(snapshot.data['DEX'])}'),
                 Text('HP: '+ '${snapshot.data['HP']}')
               ],
+            ),
+             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text('Fortitude: '+ '${snapshot.data['FORTITUDE']}'),
+                Text('Reflex: '+ '${snapshot.data['REFLEX']}'),
+                Text('Will: '+ '${snapshot.data['WILL']}')
+              ],
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 16.0),
+              height: 50,
+              child: Text(
+                'Basic Atack Bonus: ${snapshot.data['BAB']}',
+                textAlign: TextAlign.center,
+              )
             ),
             ButtonBar(
               alignment: MainAxisAlignment.center,
@@ -106,6 +123,6 @@ class _MycharacterInformationScreenState extends State<MycharacterInformationScr
   }
   
   void deleteCharacter() async{
-    await FirebaseFirestore.instance.collection('characters').document(widget.documentIndex).delete();
+    await FirebaseFirestore.instance.collection('characters').doc(widget.documentIndex).delete();
   }
 }

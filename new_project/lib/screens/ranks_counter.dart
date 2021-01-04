@@ -29,7 +29,7 @@ class _RanksCounterState extends State<RanksCounter> {
             }
           },
           child: Container(
-            color: Colors.blue,
+            color: Theme.of(context).primaryColor,
             child: Icon(Icons.add),
           ),
         ),
@@ -52,7 +52,7 @@ class _RanksCounterState extends State<RanksCounter> {
               });
             },
           child: Container(
-            color: Colors.blue,
+            color: Theme.of(context).primaryColor,
             child: Icon(Icons.remove),
           ),
         )

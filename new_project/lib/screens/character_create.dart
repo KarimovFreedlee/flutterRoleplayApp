@@ -172,7 +172,6 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
                 ]
               ),
               Table(
-                border: TableBorder.all(),
                 children: [
                  TableRow(
                   children: [
@@ -218,10 +217,12 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
   }
 
   Widget _tableContainer(Widget child, {double height = 100,}){
-    return Container(
-      height: height,
-      alignment: Alignment.center,
-      child: child,
+    return Card(
+      child: Container(
+        height: height,
+        alignment: Alignment.center,
+        child: child,
+      ),
     );
   }
 
@@ -389,47 +390,51 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
   void characterClass(String className){
     switch(className){
       case 'Bard':
-        _characterClass = characterClassCreater(8,6);
+        _characterClass = characterClassCreater(8,6,0,2,2,0);
       break;
       case 'Barbarian':
-        _characterClass = characterClassCreater(12,4);
+        _characterClass = characterClassCreater(12,4,2,0,0,1);
       break;
       case 'Cleric':
-        _characterClass = characterClassCreater(8,2);
+        _characterClass = characterClassCreater(8,2,2,0,2,0);
       break;
       case 'Druid':
-        _characterClass = characterClassCreater(8,4);
+        _characterClass = characterClassCreater(8,4,2,0,2,0);
       break;
       case 'Fighter':
-        _characterClass = characterClassCreater(10,2);
+        _characterClass = characterClassCreater(10,2,2,0,0,1);
       break;
       case 'Monk':
-        _characterClass = characterClassCreater(10,4);
+        _characterClass = characterClassCreater(10,4,2,2,2,0);
       break;
       case 'Paladin':
-        _characterClass = characterClassCreater(10,2);
+        _characterClass = characterClassCreater(10,2,2,0,2,1);
       break;
       case 'Ranger':
-        _characterClass = characterClassCreater(10,6);
+        _characterClass = characterClassCreater(10,6,2,2,0,1);
       break;
       case 'Rouge':
-        _characterClass = characterClassCreater(8,8);
+        _characterClass = characterClassCreater(8,8,0,2,0,0);
       break;
       case 'Sorcerer':
-        _characterClass = characterClassCreater(6,2);
+        _characterClass = characterClassCreater(6,2,0,0,2,0);
       break;
       case 'Wizard':
-        _characterClass = characterClassCreater(6,2);
+        _characterClass = characterClassCreater(6,2,0,0,2,0);
       break;
     }
     return null;
   }
 
 
-  Map characterClassCreater(int hp, skillRanks){
+  Map characterClassCreater(int hp, skillRanks, fortitude, reflex, will, bab){
     return {
       'hp' : hp,
-      'skillRanks' : _modifier(intController.text)+skillRanks
+      'skillRanks' : _modifier(intController.text)+skillRanks,
+      'fortitude' : fortitude,
+      'reflex' : reflex,
+      'will' : will,
+      'bab' : bab
     };
   }
 
@@ -442,6 +447,10 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
         'class': characterClass,
         'HP': _characterClass['hp'],
         'SKILL_RANKS': _characterClass['skillRanks'],
+        'FORTITUDE': (_modifier(conController.text) + _characterClass['fortitude']),
+        'REFLEX' : _modifier(dexController.text) + _characterClass['reflex'],
+        'WILL' : _modifier(wisController.text) + _characterClass['will'],
+        'BAB' : _characterClass['bab'],
         'STR': stringSum(strController.text, racialStr.text),
         'DEX': stringSum(dexController.text, racialDex.text),
         'CON': stringSum(conController.text, racialCon.text),

@@ -5,7 +5,7 @@ import 'package:new_project/index.dart';
 class MyCharacterSkillsScreen extends StatefulWidget {
 
   final String documentIndex;
-
+  
   const MyCharacterSkillsScreen({Key key, this.documentIndex}) : super(key: key);
   @override
   _MyCharacterSkillsScreenState createState() => _MyCharacterSkillsScreenState();
@@ -26,7 +26,7 @@ class _MyCharacterSkillsScreenState extends State<MyCharacterSkillsScreen> {
 
         availableRanks = snapshot.data['SKILL_RANKS'];
         
-        RanksCounter ranksCounter = RanksCounter(maxCounterValue:snapshot.data['Lvl'],callback: callback,availableRanks: availableRanks,);
+        RanksCounter ranksCounter = RanksCounter(maxCounterValue:snapshot.data['Lvl'], callback: callback, availableRanks: availableRanks,);
         return ListView(
           children: [
             Container(
@@ -47,7 +47,6 @@ class _MyCharacterSkillsScreenState extends State<MyCharacterSkillsScreen> {
               )
             ),
             Table(
-              border: TableBorder.all(),
               children: [
                   TableRow(
                   children: [
@@ -80,7 +79,7 @@ class _MyCharacterSkillsScreenState extends State<MyCharacterSkillsScreen> {
                 _tableRow('Use Magic Device*', _totalBonus(_modifier(snapshot.data['CHA']),ranksCounter.counter), snapshot.data['CHA']),
               ],
             ),
-            RaisedButton(
+            ElevatedButton(
               onPressed: applayRanks,
               child: const Text('Applay ranks ', style: TextStyle(fontSize: 20)),
             )
@@ -118,16 +117,20 @@ class _MyCharacterSkillsScreenState extends State<MyCharacterSkillsScreen> {
   }
   
   Widget _tableContainer(Widget child, {double height = 70,}){
-    return Container(
-      height: height,
-      alignment: Alignment.center,
-      child: child,
+    return Card(
+        child: Container(
+        height: height,
+        alignment: Alignment.center,
+        child: child,
+      ),
     );
   }
 
   void callback() {
     if(availableRanks != 0){
-      availableRanks --;
+      setState((){
+         availableRanks --;
+      });
       print(availableRanks);
     }
   }

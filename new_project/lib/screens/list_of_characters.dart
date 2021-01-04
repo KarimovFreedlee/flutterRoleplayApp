@@ -18,14 +18,14 @@ class _MyListOfCharactersScreenState extends State<MyListOfCharactersScreen> {
         title: Text(widget.title),
       ),
       body: Container(
-        color: Colors.grey[350],
         child: Center(
           child: widget.charactersListView
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => MyCharacterCreateScreen())),
-        child: Icon(Icons.person_add)
+        child: Icon(Icons.person_add),
+        backgroundColor: Theme.of(context).primaryColor,
       )
     );
   }
