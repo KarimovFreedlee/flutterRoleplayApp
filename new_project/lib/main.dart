@@ -67,19 +67,29 @@ class CharactersList extends StatelessWidget {
             return Padding(
               padding: const EdgeInsets.all(3.0),
               child: Card(
-                color: Color(0xff3a1f14),
+                color: Colors.grey,
                 shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15.0),
                 ),
                 child: Column(
                   children: [
-                    Center(child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Text(document['name']+' - '+document['race']+' '+ document['class']),
-                        Text('Lvl: '+'${document['Lvl']}')
-                      ],
-                    )),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor,
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(15.0),
+                        )
+                      ),
+                      child: Stack(
+                        children: [
+                          Align(alignment: Alignment.center, child: Text(document['name']+' - '+document['race']+' '+ document['class'])),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: Align(alignment: Alignment.centerRight, child: Text('Lvl: '+'${document['Lvl']}')),
+                          )  
+                        ],
+                      ),
+                    ),
                     ListTile(
                       title: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
