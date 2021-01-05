@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 class RanksCounter extends StatefulWidget {
-  RanksCounter({this.counter = 0, this.maxCounterValue, this.availableRanks, this.callback, this.callbackIncrement, this.levelUp});
+  RanksCounter({this.counter = 0, this.maxCounterValue, this.minCounterValue, this.availableRanks, this.callback, this.callbackIncrement, this.levelUp});
   int counter;
   int maxCounterValue;
+  int minCounterValue;
   int availableRanks;
   bool levelUp;
   Function callback;
@@ -14,10 +15,10 @@ class RanksCounter extends StatefulWidget {
 }
 
 class _RanksCounterState extends State<RanksCounter> {
-  int minCounterValue;
+
   @override
   Widget build(BuildContext context) {
-    minCounterValue = widget.counter;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
@@ -48,13 +49,13 @@ class _RanksCounterState extends State<RanksCounter> {
         ),
         InkWell(
           onTap: (){
-            if(widget.counter < minCounterValue){
+            if(widget.counter > widget.minCounterValue){
               widget.callbackIncrement();
-                setState((){
-                  widget.counter--;
-                });
-              }
-            },
+              setState((){
+                widget.counter--;
+              });
+            }
+          },
           child: Container(
             decoration: BoxDecoration(
               color: Theme.of(context).primaryColor,

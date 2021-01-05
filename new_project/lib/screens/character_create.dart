@@ -449,7 +449,7 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
       'HP': _characterClass['hp'],
       'SKILL_RANKS': _characterClass['skillRanks'],
       'SKILL_RANKS_LIST': listOfSkillRanks,
-      'FORTITUDE': (_modifier(conController.text) + _characterClass['fortitude']),
+      'FORTITUDE': _modifier(conController.text) + _characterClass['fortitude'],
       'REFLEX' : _modifier(dexController.text) + _characterClass['reflex'],
       'WILL' : _modifier(wisController.text) + _characterClass['will'],
       'BAB' : _characterClass['bab'],

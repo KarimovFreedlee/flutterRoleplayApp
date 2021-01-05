@@ -43,7 +43,8 @@ class _MyCharacterSkillsScreenState extends State<MyCharacterSkillsScreen> {
         List listOfRanksCountersValue = snapshot.data['SKILL_RANKS_LIST'];
         for(var i = 0; i < 23; i++){
           RanksCounter ranksCounter = RanksCounter(
-            maxCounterValue:snapshot.data['Lvl'], 
+            maxCounterValue:snapshot.data['Lvl'],
+            minCounterValue: listOfRanksCountersValue[i],
             callback: callback, 
             availableRanks: availableRanks, 
             callbackIncrement: callbackIncrement, 
