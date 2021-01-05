@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:new_project/index.dart';
 
 class MycharacterInformationScreen extends StatefulWidget {
   final String documentIndex;
@@ -16,7 +17,10 @@ class _MycharacterInformationScreenState extends State<MycharacterInformationScr
     return StreamBuilder(
       stream: FirebaseFirestore.instance.collection('characters').doc(widget.documentIndex).snapshots(),
       builder: (context, snapshot) {
-        if(!snapshot.hasData) return Text('Loading data....');
+        if(!snapshot.hasData) return SpinKitFadingCircle(
+          color: Colors.white,
+          size: 50.0,
+        );
         return ListView(
           children: [
             Container(

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:new_project/index.dart';
 
 class MyCharacterAbilitiesScreen extends StatefulWidget {
 
@@ -30,7 +30,10 @@ class _MyCharacterAbilitiesScreenState extends State<MyCharacterAbilitiesScreen>
       // ignore: deprecated_member_use
       stream: FirebaseFirestore.instance.collection('characters').document(widget.documentIndex).snapshots(),
       builder: (context, snapshot) {
-        if(!snapshot.hasData) return Text('Loading data....');
+        if(!snapshot.hasData) return SpinKitFadingCircle(
+          color: Colors.white,
+          size: 50.0,
+        );
         return ListView(
           children: [
             Container(

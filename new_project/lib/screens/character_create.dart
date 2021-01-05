@@ -35,6 +35,7 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
   String dropdownClassValue = 'Bard';
   String dropdownRaceValue = 'Dwarf';
 
+  List<int> listOfSkillRanks = List.filled(24, 0);
   List<String> classes = ['Bard', 'Barbarian', 'Cleric', 'Druid','Fighter','Monk', 'Paladin', 'Ranger', 'Rogue', 'Sorcerer', 'Wizard'];
   List<String> races = ['Dwarf', 'Elf', 'Gnome', 'Half Elf','Half Orc','Halfling', 'Human'];
 
@@ -84,10 +85,9 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
    racialCha.text = '';
  }
 
-  RanksCounter ranksCounter = RanksCounter();
-
   @override
   Widget build(BuildContext context) {
+    print(listOfSkillRanks);
     return  Scaffold(
       appBar: AppBar(
         title: Text('Character creator')
@@ -439,25 +439,27 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
   }
 
   void createRecord(String name, race, characterClass) async {
-      await databaseReference.collection("characters")
-      .add({
-        'name': name,
-        'race': race,
-        'Lvl': 1,
-        'class': characterClass,
-        'HP': _characterClass['hp'],
-        'SKILL_RANKS': _characterClass['skillRanks'],
-        'FORTITUDE': (_modifier(conController.text) + _characterClass['fortitude']),
-        'REFLEX' : _modifier(dexController.text) + _characterClass['reflex'],
-        'WILL' : _modifier(wisController.text) + _characterClass['will'],
-        'BAB' : _characterClass['bab'],
-        'STR': stringSum(strController.text, racialStr.text),
-        'DEX': stringSum(dexController.text, racialDex.text),
-        'CON': stringSum(conController.text, racialCon.text),
-        'INT': stringSum(intController.text, racialInt.text),
-        'WIS': stringSum(wisController.text, racialWis.text),
-        'CHA': stringSum(chaController.text, racialCha.text),
-      });
+    await databaseReference.collection("characters")
+    .add({
+      'name': name,
+      'race': race,
+      'Lvl': 1,
+      'LEVEL_UP': true,
+      'class': characterClass,
+      'HP': _characterClass['hp'],
+      'SKILL_RANKS': _characterClass['skillRanks'],
+      'SKILL_RANKS_LIST': listOfSkillRanks,
+      'FORTITUDE': (_modifier(conController.text) + _characterClass['fortitude']),
+      'REFLEX' : _modifier(dexController.text) + _characterClass['reflex'],
+      'WILL' : _modifier(wisController.text) + _characterClass['will'],
+      'BAB' : _characterClass['bab'],
+      'STR': stringSum(strController.text, racialStr.text),
+      'DEX': stringSum(dexController.text, racialDex.text),
+      'CON': stringSum(conController.text, racialCon.text),
+      'INT': stringSum(intController.text, racialInt.text),
+      'WIS': stringSum(wisController.text, racialWis.text),
+      'CHA': stringSum(chaController.text, racialCha.text),
+    });
   }
   
   int _modifier (String val){

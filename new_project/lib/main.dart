@@ -58,7 +58,10 @@ class CharactersList extends StatelessWidget {
     return StreamBuilder(
       stream: FirebaseFirestore.instance.collection('characters').snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (!snapshot.hasData) return Text('Loading...');
+        if (!snapshot.hasData) return SpinKitRotatingCircle(
+            color: Colors.white,
+            size: 50.0,
+          );
         return ListView(
           // ignore: deprecated_member_use
           children: snapshot.data.documents.map((document) {
