@@ -1,34 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class RanksCounter extends StatefulWidget {
-  RanksCounter({this.counter = 0, this.maxCounterValue, this.minCounterValue, this.availableRanks, this.callback, this.callbackIncrement, this.levelUp});
+  RanksCounter({this.counter = 0, this.maxCounterValue, this.minCounterValue, this.availableRanks, this.levelUp});
   int counter;
   int maxCounterValue;
   int minCounterValue;
   int availableRanks;
   bool levelUp;
-  Function callback;
-  Function callbackIncrement;
 
   @override
   _RanksCounterState createState() => _RanksCounterState();
 }
 
 class _RanksCounterState extends State<RanksCounter> {
-
   @override
   Widget build(BuildContext context) {
-
-    return Column(
+    final _textNotifier = context.watch<ValueNotifier<int>>();
+    return widget.levelUp ? Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         InkWell(
           onTap: (){
-            if(widget.counter != widget.maxCounterValue && widget.availableRanks != 0){
-              widget.callback();
+            if(widget.counter != widget.maxCounterValue &&  _textNotifier.value != 0){
+              _textNotifier.value-=1;
               setState((){
                 widget.counter++;
-              }); 
+              });
             }
           },
           child: Container(
@@ -50,7 +48,7 @@ class _RanksCounterState extends State<RanksCounter> {
         InkWell(
           onTap: (){
             if(widget.counter > widget.minCounterValue){
-              widget.callbackIncrement();
+              _textNotifier.value+=1;
               setState((){
                 widget.counter--;
               });
@@ -58,25 +56,18 @@ class _RanksCounterState extends State<RanksCounter> {
           },
           child: Container(
             decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor,
+              color: !widget.levelUp ? Colors.grey : Theme.of(context).primaryColor,
               borderRadius: BorderRadius.circular(3.0),
             ),
             child: Icon(Icons.remove),
           ),
         )
       ],
-    );
-  }
-
-  Widget inableButton(IconData icon){
-    return InkWell(
-      child: Container(
-        decoration: BoxDecoration(
-          color: !widget.levelUp ? Colors.grey : Theme.of(context).primaryColor,
-          borderRadius: BorderRadius.circular(3.0),
-        ),
-        child: Icon(icon),
-      ),
-    );
+      ) : Center(
+              child: Text(
+                '${widget.counter}',
+                textAlign: TextAlign.center,
+              ),
+            );
   }
 }

@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-
+import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:new_project/index.dart';
@@ -29,11 +29,12 @@ class _MyCharacterSkillsScreenState extends State<MyCharacterSkillsScreen> {
     );
     super.initState();
   }
-  int ranksFromData;
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
+    return ChangeNotifierProvider(
+      create: (context) => ValueNotifier(availableRanks),
+      child: StreamBuilder(
       stream: db.collection('characters').doc(widget.documentIndex).snapshots(),
       builder: (context, snapshot) {
         if(!snapshot.hasData) return SpinKitFadingCircle(
@@ -41,13 +42,12 @@ class _MyCharacterSkillsScreenState extends State<MyCharacterSkillsScreen> {
           size: 50.0,
         );
         List listOfRanksCountersValue = snapshot.data['SKILL_RANKS_LIST'];
-        for(var i = 0; i < 23; i++){
+        final _textNotifier = context.watch<ValueNotifier<int>>();
+        for(var i = 0; i < 25; i++){
           RanksCounter ranksCounter = RanksCounter(
             maxCounterValue:snapshot.data['Lvl'],
-            minCounterValue: listOfRanksCountersValue[i],
-            callback: callback, 
+            minCounterValue: listOfRanksCountersValue[i], 
             availableRanks: availableRanks, 
-            callbackIncrement: callbackIncrement, 
             counter: listOfRanksCountersValue[i], 
             levelUp: snapshot.data['LEVEL_UP']
           );
@@ -66,7 +66,7 @@ class _MyCharacterSkillsScreenState extends State<MyCharacterSkillsScreen> {
                     textAlign: TextAlign.center,
                   ),
                   Text(
-                    '$availableRanks',
+                    '${_textNotifier.value}',
                     textAlign: TextAlign.center,
                   ),
                 ],
@@ -90,33 +90,34 @@ class _MyCharacterSkillsScreenState extends State<MyCharacterSkillsScreen> {
                 _tableRow('Diplomacy', _totalBonus(_modifier(snapshot.data['CHA']),listOfRanksCounters[5].counter), snapshot.data['CHA'], widget: listOfRanksCounters[5]),
                 _tableRow('Disguise', _totalBonus(_modifier(snapshot.data['CHA']),listOfRanksCounters[6].counter), snapshot.data['CHA'], widget: listOfRanksCounters[6]),
                 _tableRow('Escape Artist', _totalBonus(_modifier(snapshot.data['DEX']),listOfRanksCounters[7].counter), snapshot.data['DEX'], widget: listOfRanksCounters[7]),
-                _tableRow('Fly', _totalBonus(_modifier(snapshot.data['DEX']),0), snapshot.data['DEX']),
-                _tableRow('Handle Animal*', _totalBonus(_modifier(snapshot.data['CHA']),0), snapshot.data['CHA']),
-                _tableRow('Heal', _totalBonus(_modifier(snapshot.data['WIS']),0), snapshot.data['WIS']),
-                _tableRow('Intimidate', _totalBonus(_modifier(snapshot.data['CHA']), 0), snapshot.data['CHA']),
-                _tableRow('Knowledge*', _totalBonus(_modifier(snapshot.data['INT']),0), snapshot.data['INT']),
-                _tableRow('Linguistics*', _totalBonus(_modifier(snapshot.data['INT']),0), snapshot.data['INT']),
-                _tableRow('Perception', _totalBonus(_modifier(snapshot.data['WIS']),0), snapshot.data['WIS']),
-                _tableRow('Perform', _totalBonus(_modifier(snapshot.data['CHA']),0), snapshot.data['CHA']),
-                _tableRow('Profession', _totalBonus(_modifier(snapshot.data['WIS']),0), snapshot.data['WIS']),
-                _tableRow('Ride', _totalBonus(_modifier(snapshot.data['DEX']),0), snapshot.data['DEX']),
-                _tableRow('Sense Motive', _totalBonus(_modifier(snapshot.data['WIS']),0), snapshot.data['WIS']),
-                _tableRow('Sleight of Hand*', _totalBonus(_modifier(snapshot.data['DEX']),0), snapshot.data['DEX']),
-                _tableRow('Spellcraft*', _totalBonus(_modifier(snapshot.data['INT']),0), snapshot.data['INT']),
-                _tableRow('Stealth', _totalBonus(_modifier(snapshot.data['DEX']),0), snapshot.data['DEX']),
-                _tableRow('Survival', _totalBonus(_modifier(snapshot.data['WIS']),0), snapshot.data['WIS']),
-                _tableRow('Swim', _totalBonus(_modifier(snapshot.data['STR']),0), snapshot.data['STR']),
-                _tableRow('Use Magic Device*', _totalBonus(_modifier(snapshot.data['CHA']),0), snapshot.data['CHA']),
+                _tableRow('Fly', _totalBonus(_modifier(snapshot.data['DEX']),listOfRanksCounters[8].counter), snapshot.data['DEX'], widget: listOfRanksCounters[8]),
+                _tableRow('Handle Animal*', _totalBonus(_modifier(snapshot.data['CHA']),listOfRanksCounters[9].counter), snapshot.data['CHA'], widget: listOfRanksCounters[9]),
+                _tableRow('Heal', _totalBonus(_modifier(snapshot.data['WIS']),listOfRanksCounters[10].counter), snapshot.data['WIS'], widget: listOfRanksCounters[10]),
+                _tableRow('Intimidate', _totalBonus(_modifier(snapshot.data['CHA']), listOfRanksCounters[11].counter), snapshot.data['CHA'], widget: listOfRanksCounters[11]),
+                _tableRow('Knowledge*', _totalBonus(_modifier(snapshot.data['INT']),listOfRanksCounters[12].counter), snapshot.data['INT'], widget: listOfRanksCounters[12]),
+                _tableRow('Linguistics*', _totalBonus(_modifier(snapshot.data['INT']),listOfRanksCounters[13].counter), snapshot.data['INT'], widget: listOfRanksCounters[13]),
+                _tableRow('Perception', _totalBonus(_modifier(snapshot.data['WIS']),listOfRanksCounters[14].counter), snapshot.data['WIS'], widget: listOfRanksCounters[14]),
+                _tableRow('Perform', _totalBonus(_modifier(snapshot.data['CHA']),listOfRanksCounters[15].counter), snapshot.data['CHA'], widget: listOfRanksCounters[15]),
+                _tableRow('Profession', _totalBonus(_modifier(snapshot.data['WIS']),listOfRanksCounters[16].counter), snapshot.data['WIS'], widget: listOfRanksCounters[16]),
+                _tableRow('Ride', _totalBonus(_modifier(snapshot.data['DEX']),listOfRanksCounters[17].counter), snapshot.data['DEX'], widget: listOfRanksCounters[17]),
+                _tableRow('Sense Motive', _totalBonus(_modifier(snapshot.data['WIS']),listOfRanksCounters[18].counter), snapshot.data['WIS'], widget: listOfRanksCounters[18]),
+                _tableRow('Sleight of Hand*', _totalBonus(_modifier(snapshot.data['DEX']),listOfRanksCounters[19].counter), snapshot.data['DEX'], widget: listOfRanksCounters[19]),
+                _tableRow('Spellcraft*', _totalBonus(_modifier(snapshot.data['INT']),listOfRanksCounters[20].counter), snapshot.data['INT'], widget: listOfRanksCounters[20]),
+                _tableRow('Stealth', _totalBonus(_modifier(snapshot.data['DEX']),listOfRanksCounters[21].counter), snapshot.data['DEX'], widget: listOfRanksCounters[21]),
+                _tableRow('Survival', _totalBonus(_modifier(snapshot.data['WIS']),listOfRanksCounters[22].counter), snapshot.data['WIS'], widget: listOfRanksCounters[22]),
+                _tableRow('Swim', _totalBonus(_modifier(snapshot.data['STR']),listOfRanksCounters[23].counter), snapshot.data['STR'], widget: listOfRanksCounters[23]),
+                _tableRow('Use Magic Device*', _totalBonus(_modifier(snapshot.data['CHA']),listOfRanksCounters[24].counter), snapshot.data['CHA'], widget: listOfRanksCounters[24]),
               ],
             ),
             ElevatedButton(
-              onPressed: applayRanks,
+              onPressed: () => alert(_textNotifier.value),
               child: const Text('Applay ranks ', style: TextStyle(fontSize: 20)),
             )
           ], 
         );
       }
-    );
+    ),
+  );
   }
 
   TableRow _tableRow(String title, Widget _secondColumn, String textController, {Widget widget}){
@@ -156,34 +157,55 @@ class _MyCharacterSkillsScreenState extends State<MyCharacterSkillsScreen> {
     );
   }
 
-  void callback() {
-    if(availableRanks != 0){
-      setState((){
-        availableRanks--;
-      });
-    }
+  Future<void> alert(int value){
+    return showDialog<void>(
+    context: context,
+    barrierDismissible: false, // user must tap button!
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Apply ranks'),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              Text('This will apply ranks to skills.'),
+              Text('Are you sure you want to apply this ranks?'),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Accept'),
+            onPressed: () {
+              applayRanks(value);
+              Navigator.of(context).pop();
+              Navigator.pop(context);
+            },
+          ),
+          TextButton(
+            child: Text('Cancel'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
   }
 
-  void callbackIncrement() {
-    if(availableRanks != 0){
-      setState((){
-         availableRanks++;
-      });
-    }
-  }
-
-  void applayRanks(){
-    if(availableRanks == 0){
+  void applayRanks(int value){
+    if(value == 0){
       setState((){
       levelUp = false;
     });
     }
-    List<int> list = List.filled(24, 0);
-    for( var i = 0; i < 23; i++){
+    List<int> list = List.filled(25, 0);
+    for( var i = 0; i < 25; i++){
       list[i] = listOfRanksCounters[i].counter;
     }
-    db.collection('characters').doc(widget.documentIndex).update({'SKILL_RANKS': availableRanks});
-    db.collection('characters').doc(widget.documentIndex).update({'SKILL_RANKS_LIST': list}); 
+    db.collection('characters').doc(widget.documentIndex).update({'SKILL_RANKS': value});
+    db.collection('characters').doc(widget.documentIndex).update({'SKILL_RANKS_LIST': list});
+    db.collection('characters').doc(widget.documentIndex).update({'LEVEL_UP': levelUp}); 
   }
 }
 

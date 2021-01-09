@@ -35,7 +35,7 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
   String dropdownClassValue = 'Bard';
   String dropdownRaceValue = 'Dwarf';
 
-  List<int> listOfSkillRanks = List.filled(24, 0);
+  List<int> listOfSkillRanks = List.filled(25, 0);
   List<String> classes = ['Bard', 'Barbarian', 'Cleric', 'Druid','Fighter','Monk', 'Paladin', 'Ranger', 'Rogue', 'Sorcerer', 'Wizard'];
   List<String> races = ['Dwarf', 'Elf', 'Gnome', 'Half Elf','Half Orc','Halfling', 'Human'];
 
@@ -73,7 +73,6 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
         break;
       }
     });
-    print(racialStr.text);
   }
 
  void _cleanRacialControllers(){
@@ -87,7 +86,6 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(listOfSkillRanks);
     return  Scaffold(
       appBar: AppBar(
         title: Text('Character creator')
@@ -95,7 +93,6 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
       body: GestureDetector(
         onTap: () {
           FocusScopeNode currentFocus = FocusScope.of(context);
-
           if (!currentFocus.hasPrimaryFocus) {
             currentFocus.unfocus();
           }
@@ -413,7 +410,7 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
       case 'Ranger':
         _characterClass = characterClassCreater(10,6,2,2,0,1);
       break;
-      case 'Rouge':
+      case 'Rogue':
         _characterClass = characterClassCreater(8,8,0,2,0,0);
       break;
       case 'Sorcerer':

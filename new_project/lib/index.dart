@@ -7,4 +7,5 @@ export 'screens/character_skills.dart';
 export 'screens/ranks_counter.dart';
 export 'screens/character_information.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 export 'package:flutter_spinkit/flutter_spinkit.dart';

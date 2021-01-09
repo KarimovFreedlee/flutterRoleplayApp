@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
           accentColor: Color(0xff3f2318),
           elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
-              primary: Color(0xffefda91),
+              primary: Colors.orange[200],
             ),
           ),
         ),
