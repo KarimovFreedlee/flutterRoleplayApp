@@ -114,8 +114,8 @@ class _MyCharacterSkillsScreenState extends State<MyCharacterSkillsScreen> {
               ],
             ),
             RaisedButton(
-              color: levelUp ? Theme.of(context).primaryColor : Colors.grey,
-              onPressed: levelUp ? () => alert(_textNotifier.value) : (){},
+              color: Theme.of(context).primaryColor,
+              onPressed: levelUp ? () => alert(_textNotifier.value) : null,
               child: const Text('Applay ranks ', style: TextStyle(fontSize: 20)),
             )
           ], 

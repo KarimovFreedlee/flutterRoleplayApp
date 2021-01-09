@@ -36,31 +36,26 @@ class _MyCharacterAbilitiesScreenState extends State<MyCharacterAbilitiesScreen>
         );
         return ListView(
           children: [
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 16.0),
-              height: 50,
-              child: Text(
-                'Ability',
-                textAlign: TextAlign.center,
-              )
-            ),
-            Table(
-              children: [
-                  TableRow(
-                  children: [
-                    _tableContainer(Text('Name'), height: 30),
-                    _tableContainer(Text('Score'), height: 30),
-                    _tableContainer(Text('Modify'), height: 30),
-                    // _tableContainer(Text('Temp'), height: 30),
-                  ]
-                ),
-                _tableRow('STR', _abilityScore(strController, strController.text = snapshot.data['STR']), strController),
-                _tableRow('DEX', _abilityScore(dexController, dexController.text = snapshot.data['DEX']), dexController),
-                _tableRow('CON', _abilityScore(conController, conController.text = snapshot.data['CON']), conController),
-                _tableRow('INT', _abilityScore(intController, intController.text = snapshot.data['INT']), intController),
-                _tableRow('WIS', _abilityScore(wisController, wisController.text = snapshot.data['WIS']), wisController),
-                _tableRow('CHA', _abilityScore(chaController, chaController.text = snapshot.data['CHA']), chaController),
-              ],
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Table(
+                children: [
+                    TableRow(
+                    children: [
+                      _tableContainer(Text('Name'), height: 30),
+                      _tableContainer(Text('Score'), height: 30),
+                      _tableContainer(Text('Modify'), height: 30),
+                      // _tableContainer(Text('Temp'), height: 30),
+                    ]
+                  ),
+                  _tableRow('STR', _abilityScore(strController, strController.text = snapshot.data['STR']), strController),
+                  _tableRow('DEX', _abilityScore(dexController, dexController.text = snapshot.data['DEX']), dexController),
+                  _tableRow('CON', _abilityScore(conController, conController.text = snapshot.data['CON']), conController),
+                  _tableRow('INT', _abilityScore(intController, intController.text = snapshot.data['INT']), intController),
+                  _tableRow('WIS', _abilityScore(wisController, wisController.text = snapshot.data['WIS']), wisController),
+                  _tableRow('CHA', _abilityScore(chaController, chaController.text = snapshot.data['CHA']), chaController),
+                ],
+              ),
             ),
           ],
         );

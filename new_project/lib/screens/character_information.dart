@@ -21,60 +21,170 @@ class _MycharacterInformationScreenState extends State<MycharacterInformationScr
           color: Colors.white,
           size: 50.0,
         );
-        return ListView(
-          children: [
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 16.0),
-              height: 50,
-              child: Text(
-                'Info',
-                textAlign: TextAlign.center,
-              )
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text('AC: '+ '${10+_modifier(snapshot.data['DEX'])}'),
-                Text('Initiative: '+ '${_modifier(snapshot.data['DEX'])}'),
-                Text('HP: '+ '${snapshot.data['HP']}')
-              ],
-            ),
-             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text('Fortitude: '+ '${snapshot.data['FORTITUDE']}'),
-                Text('Reflex: '+ '${snapshot.data['REFLEX']}'),
-                Text('Will: '+ '${snapshot.data['WILL']}')
-              ],
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 16.0),
-              height: 50,
-              child: Text(
-                'Basic Atack Bonus: ${snapshot.data['BAB']}',
-                textAlign: TextAlign.center,
-              )
-            ),
-            ButtonBar(
-              alignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    alert();
-                  },
-                  child: Text('Delete character', style: TextStyle(fontSize: 20)
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListView(
+            children: [
+              Card(
+                child: Container(
+                  height: 50,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text(
+                        'Race:',
+                        textAlign: TextAlign.center,
+                      ),
+                      Text(
+                        '${snapshot.data['race']}',
+                        textAlign: TextAlign.center,
+                      ),
+                      Text(
+                        'Class:',
+                        textAlign: TextAlign.center,
+                      ),
+                      Text(
+                        '${snapshot.data['class']}',
+                        textAlign: TextAlign.center,
+                      ),
+                      Text(
+                        'Level:',
+                        textAlign: TextAlign.center,
+                      ),
+                      Text(
+                        '${snapshot.data['Lvl']}',
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
                   ),
                 ),
-                RaisedButton(
-                  onPressed: null,
-                  child: Text('Edit character', style: TextStyle(fontSize: 20)
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(100.0),
+                      child: Container(
+                        height: 160,
+                        width: 160,
+                        color: Colors.grey[800],
+                        child: Text('Avatar is going to be here'),
+                      ),
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                  Column(
+                    children: [
+                      Card(
+                        child: Container(
+                          alignment: Alignment.center,
+                          height: 50,
+                          width: 120,
+                          child: Text('Initiative: '+ '${_modifier(snapshot.data['DEX'])}'),
+                        ),
+                      ),
+                      Card(
+                        child: Container(
+                          alignment: Alignment.center,
+                          height: 50,
+                          width: 120,
+                          child: Text('AC: '+ '${10+_modifier(snapshot.data['DEX'])}'),
+                        ),
+                      ),
+                      Card(
+                        child: Container(
+                          alignment: Alignment.center,
+                          height: 50,
+                          width: 120,
+                          child: Text('HP: '+ '${snapshot.data['HP']}'),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  saveThrowsContainer('Fortitude', '${snapshot.data['FORTITUDE']}'),
+                  saveThrowsContainer('Reflex', '${snapshot.data['REFLEX']}'),
+                  saveThrowsContainer('Will', '${snapshot.data['WILL']}'),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Card(
+                    child: Container(
+                      alignment: Alignment.center,
+                      height: 50,
+                      width: 150,
+                      child: Text(
+                        'Basic Atack Bonus',
+                        textAlign: TextAlign.center,
+                      ),
+                    )
+                  ),
+                  Card(
+                    child: Container(
+                      alignment: Alignment.center,
+                      height: 50,
+                      width: 50,
+                      child: Text(
+                        '${snapshot.data['BAB']}',
+                        textAlign: TextAlign.center,
+                      ),
+                    )
+                  ),
+                ],
+              ),
+              ButtonBar(
+                alignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      alert();
+                    },
+                    child: Text('Delete character', style: TextStyle(fontSize: 20)
+                    ),
+                  ),
+                  RaisedButton(
+                    onPressed: null,
+                    child: Text('Edit character', style: TextStyle(fontSize: 20)
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         );
       }
+    );
+  }
+
+  Widget saveThrowsContainer(String text, value, {double width = 100}){
+    return Container(
+      child: Column(
+        children: [
+          Card(
+            child: Container(
+              alignment: Alignment.center,
+              height: 50,
+              width: width,
+              child: Text(text),
+            )
+          ),
+          Card(
+            child: Container(
+              alignment: Alignment.center,
+              height: 80,
+              width: width,
+              child: Text(value),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
