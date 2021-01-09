@@ -18,7 +18,7 @@ class _MyCharacterSkillsScreenState extends State<MyCharacterSkillsScreen> {
 
   FirebaseFirestore db = FirebaseFirestore.instance;
   int availableRanks;
-  bool levelUp = true;
+  bool levelUp;
 
 
   initState(){
@@ -41,8 +41,11 @@ class _MyCharacterSkillsScreenState extends State<MyCharacterSkillsScreen> {
           color: Colors.white,
           size: 50.0,
         );
+
+        levelUp = snapshot.data['LEVEL_UP'];
         List listOfRanksCountersValue = snapshot.data['SKILL_RANKS_LIST'];
         final _textNotifier = context.watch<ValueNotifier<int>>();
+
         for(var i = 0; i < 25; i++){
           RanksCounter ranksCounter = RanksCounter(
             maxCounterValue:snapshot.data['Lvl'],
@@ -53,6 +56,7 @@ class _MyCharacterSkillsScreenState extends State<MyCharacterSkillsScreen> {
           );
           listOfRanksCounters.add(ranksCounter);
         }
+
         return ListView(
           children: [
             Container(
@@ -109,8 +113,9 @@ class _MyCharacterSkillsScreenState extends State<MyCharacterSkillsScreen> {
                 _tableRow('Use Magic Device*', _totalBonus(_modifier(snapshot.data['CHA']),listOfRanksCounters[24].counter), snapshot.data['CHA'], widget: listOfRanksCounters[24]),
               ],
             ),
-            ElevatedButton(
-              onPressed: () => alert(_textNotifier.value),
+            RaisedButton(
+              color: levelUp ? Theme.of(context).primaryColor : Colors.grey,
+              onPressed: levelUp ? () => alert(_textNotifier.value) : (){},
               child: const Text('Applay ranks ', style: TextStyle(fontSize: 20)),
             )
           ], 
