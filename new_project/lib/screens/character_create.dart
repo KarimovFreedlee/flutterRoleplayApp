@@ -113,7 +113,7 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children:[
                   Text('Race:'),
-                    DropdownButton<String>(
+                  DropdownButton<String>(
                     value: dropdownRaceValue,
                     icon: Icon(Icons.arrow_downward),
                     iconSize: 24,
@@ -441,6 +441,7 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
       'name': name,
       'race': race,
       'Lvl': 1,
+      'XP' : 0,
       'LEVEL_UP': true,
       'class': characterClass,
       'HP': _characterClass['hp'],

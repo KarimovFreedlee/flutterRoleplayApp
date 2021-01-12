@@ -29,7 +29,7 @@ class _RanksCounterState extends State<RanksCounter> {
               });
             }
           },
-          child: Container(
+          child: widget.counter == widget.maxCounterValue ? Container(height: 25) :  Container(
             decoration: BoxDecoration(
               color: !widget.levelUp ? Colors.grey : Theme.of(context).primaryColor,
               borderRadius: BorderRadius.circular(3.0),
@@ -54,7 +54,7 @@ class _RanksCounterState extends State<RanksCounter> {
               });
             }
           },
-          child: Container(
+          child: widget.counter == widget.minCounterValue ? Container(height: 25) : Container(
             decoration: BoxDecoration(
               color: !widget.levelUp ? Colors.grey : Theme.of(context).primaryColor,
               borderRadius: BorderRadius.circular(3.0),

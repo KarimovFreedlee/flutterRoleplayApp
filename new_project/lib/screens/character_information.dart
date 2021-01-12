@@ -12,6 +12,11 @@ class MycharacterInformationScreen extends StatefulWidget {
 }
 
 class _MycharacterInformationScreenState extends State<MycharacterInformationScreen> {
+
+  List<String> classes = ['Bard', 'Barbarian', 'Cleric', 'Druid','Fighter','Monk', 'Paladin', 'Ranger', 'Rogue', 'Sorcerer', 'Wizard'];
+
+  String dropdownClassValue = 'Bard';
+  
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -53,6 +58,14 @@ class _MycharacterInformationScreenState extends State<MycharacterInformationScr
                       ),
                       Text(
                         '${snapshot.data['Lvl']}',
+                        textAlign: TextAlign.center,
+                      ),
+                      Text(
+                        'Xp: ',
+                        textAlign: TextAlign.center,
+                      ),
+                      Text(
+                        '${snapshot.data['XP']}',
                         textAlign: TextAlign.center,
                       ),
                     ],
@@ -139,22 +152,83 @@ class _MycharacterInformationScreenState extends State<MycharacterInformationScr
                   ),
                 ],
               ),
-              ButtonBar(
-                alignment: MainAxisAlignment.center,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      alert();
-                    },
-                    child: Text('Delete character', style: TextStyle(fontSize: 20)
+                  DropdownButton<String>(
+                    value: dropdownClassValue,
+                    icon: Icon(Icons.arrow_downward),
+                    iconSize: 24,
+                    elevation: 16,
+                    style: TextStyle(color: Colors.grey),
+                    underline: Container(
+                      height: 2,
+                      color: Colors.grey,
                     ),
+                    onChanged: (String newValue) {
+                      setState(() {
+                        dropdownClassValue = newValue;
+                      });
+                    },
+                    items: classes
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList()
                   ),
                   RaisedButton(
-                    onPressed: null,
-                    child: Text('Edit character', style: TextStyle(fontSize: 20)
+                    onPressed: (){
+                      switch(dropdownClassValue){
+                        case 'Bard':
+                          levelUpCharacter(snapshot.data['Lvl'], _modifier(snapshot.data['INT'])+6+ snapshot.data['SKILL_RANKS']);
+                        break;
+                        case 'Barbarian':
+                          levelUpCharacter(snapshot.data['Lvl'], _modifier(snapshot.data['INT'])+4+ snapshot.data['SKILL_RANKS']);
+                        break;
+                        case 'Cleric':
+                          levelUpCharacter(snapshot.data['Lvl'], _modifier(snapshot.data['INT'])+2+ snapshot.data['SKILL_RANKS']);
+                        break;
+                        case 'Druid':
+                          levelUpCharacter(snapshot.data['Lvl'], _modifier(snapshot.data['INT'])+4+ snapshot.data['SKILL_RANKS']);
+                        break;
+                        case 'Fighter':
+                          levelUpCharacter(snapshot.data['Lvl'], _modifier(snapshot.data['INT'])+2+ snapshot.data['SKILL_RANKS']);
+                        break;
+                        case 'Monk':
+                          levelUpCharacter(snapshot.data['Lvl'], _modifier(snapshot.data['INT'])+4+ snapshot.data['SKILL_RANKS']);
+                        break;
+                        case 'Paladin':
+                          levelUpCharacter(snapshot.data['Lvl'], _modifier(snapshot.data['INT'])+2+ snapshot.data['SKILL_RANKS']);
+                        break;
+                        case 'Ranger':
+                          levelUpCharacter(snapshot.data['Lvl'], _modifier(snapshot.data['INT'])+6+ snapshot.data['SKILL_RANKS']);
+                        break;
+                        case 'Rogue':
+                          levelUpCharacter(snapshot.data['Lvl'], _modifier(snapshot.data['INT'])+8+ snapshot.data['SKILL_RANKS']);
+                        break;
+                        case 'Sorcerer':
+                          levelUpCharacter(snapshot.data['Lvl'], _modifier(snapshot.data['INT'])+2+ snapshot.data['SKILL_RANKS']);
+                        break;
+                        case 'Wizard':
+                          levelUpCharacter(snapshot.data['Lvl'], _modifier(snapshot.data['INT'])+2+ snapshot.data['SKILL_RANKS']);
+                        break;
+                      }
+                    Navigator.pop(context);
+                    },
+                    child: Text('Level up', style: TextStyle(fontSize: 20)
                     ),
                   ),
                 ],
+              ),
+              Text('Some character bio', textAlign: TextAlign.center),
+              ElevatedButton(
+                onPressed: () {
+                  alert();
+                },
+                child: Text('Delete character', style: TextStyle(fontSize: 20)
+                ),
               ),
             ],
           ),
@@ -236,7 +310,72 @@ class _MycharacterInformationScreenState extends State<MycharacterInformationScr
   );
   }
   
+  // Widget classHpRow(){
+  //   int hpToAdd;
+  //   switch(dropdownClassValue){
+  //     case 'Bard':
+  //       return Row(children: [
+  //         Radio(
+  //           value: 'd8',
+  //           groupValue: hpToAdd,
+  //           onChanged: (SingingCharacter value) {
+  //             setState(() {
+  //               hpToAdd = value;
+  //             });
+  //         ),
+  //         Radio(
+  //           value: '4',
+  //           groupValue: hpToAdd,
+  //           onChanged: (SingingCharacter value) {
+  //             setState(() {
+  //               hpToAdd = value;
+  //             });
+  //         )
+  //       ]);
+  //     break;
+  //     case 'Barbarian':
+  //       levelUpCharacter(snapshot.data['Lvl'], _modifier(snapshot.data['INT'])+4+ snapshot.data['SKILL_RANKS']);
+  //     break;
+  //     case 'Cleric':
+  //       levelUpCharacter(snapshot.data['Lvl'], _modifier(snapshot.data['INT'])+2+ snapshot.data['SKILL_RANKS']);
+  //     break;
+  //     case 'Druid':
+  //       levelUpCharacter(snapshot.data['Lvl'], _modifier(snapshot.data['INT'])+4+ snapshot.data['SKILL_RANKS']);
+  //     break;
+  //     case 'Fighter':
+  //       levelUpCharacter(snapshot.data['Lvl'], _modifier(snapshot.data['INT'])+2+ snapshot.data['SKILL_RANKS']);
+  //     break;
+  //     case 'Monk':
+  //       levelUpCharacter(snapshot.data['Lvl'], _modifier(snapshot.data['INT'])+4+ snapshot.data['SKILL_RANKS']);
+  //     break;
+  //     case 'Paladin':
+  //       levelUpCharacter(snapshot.data['Lvl'], _modifier(snapshot.data['INT'])+2+ snapshot.data['SKILL_RANKS']);
+  //     break;
+  //     case 'Ranger':
+  //       levelUpCharacter(snapshot.data['Lvl'], _modifier(snapshot.data['INT'])+6+ snapshot.data['SKILL_RANKS']);
+  //     break;
+  //     case 'Rogue':
+  //       levelUpCharacter(snapshot.data['Lvl'], _modifier(snapshot.data['INT'])+8+ snapshot.data['SKILL_RANKS']);
+  //     break;
+  //     case 'Sorcerer':
+  //       levelUpCharacter(snapshot.data['Lvl'], _modifier(snapshot.data['INT'])+2+ snapshot.data['SKILL_RANKS']);
+  //     break;
+  //     case 'Wizard':
+  //       levelUpCharacter(snapshot.data['Lvl'], _modifier(snapshot.data['INT'])+2+ snapshot.data['SKILL_RANKS']);
+  //     break;
+  //   }
+  // }
+
   void deleteCharacter() async{
     await FirebaseFirestore.instance.collection('characters').doc(widget.documentIndex).delete();
+  }
+
+  void levelUpCharacter(int level, skillRanks) async{
+    level++;
+    await FirebaseFirestore.instance.collection('characters').doc(widget.documentIndex).update({
+      'Lvl' : level,
+      'SKILL_RANKS': skillRanks,
+      'LEVEL_UP': true
+      });
   }
 }
