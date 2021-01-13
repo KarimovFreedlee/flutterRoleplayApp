@@ -445,7 +445,7 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
       'XP' : 0,
       'LEVEL_UP': true,
       'class': characterClass,
-      'HP': _characterClass['hp'],
+      'HP': _characterClass['hp'] + _modifier(conController.text),
       'SKILL_RANKS': _characterClass['skillRanks'],
       'SKILL_RANKS_LIST': listOfSkillRanks,
       'FORTITUDE': _characterClass['fortitude'],
