@@ -16,7 +16,7 @@ class MycharacterInformationScreen extends StatefulWidget {
 class _MycharacterInformationScreenState extends State<MycharacterInformationScreen> {
 
   FirebaseFirestore dbOfClasses = FirebaseFirestore.instance;
-  List<String> classes = ['bard', 'Barbarian', 'Cleric', 'Druid','Fighter','Monk', 'Paladin', 'Ranger', 'Rogue', 'Sorcerer', 'Wizard'];
+  List<String> classes = ['bard', 'barbarian', 'cleric', 'druid','fighter','monk', 'paladin', 'ranger', 'rogue', 'sorcerer', 'wizard'];
 
   String dropdownClassValue = 'bard';
   
