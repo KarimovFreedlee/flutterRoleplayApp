@@ -339,6 +339,7 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
       children: [
         Text('+2'),
         Radio(
+          activeColor: Theme.of(context).primaryColor,
           value: ability,
           groupValue: _radioValue,
           onChanged: _handleRadioValueChange,

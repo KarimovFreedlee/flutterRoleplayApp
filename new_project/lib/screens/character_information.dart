@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:new_project/index.dart';
@@ -14,11 +16,16 @@ class MycharacterInformationScreen extends StatefulWidget {
 class _MycharacterInformationScreenState extends State<MycharacterInformationScreen> {
 
   FirebaseFirestore dbOfClasses = FirebaseFirestore.instance;
-  List<String> classes = ['Bard', 'Barbarian', 'Cleric', 'Druid','Fighter','Monk', 'Paladin', 'Ranger', 'Rogue', 'Sorcerer', 'Wizard'];
+  List<String> classes = ['bard', 'Barbarian', 'Cleric', 'Druid','Fighter','Monk', 'Paladin', 'Ranger', 'Rogue', 'Sorcerer', 'Wizard'];
 
-  String dropdownClassValue = 'Bard';
+  String dropdownClassValue = 'bard';
   
-  int bab = 0, fortitude= 0 , reflex= 0, will = 0; 
+  int bab = 0, fortitude= 0 , reflex= 0, will = 0, hitDice, skillPoints ;
+
+  int _selectedRadio = 2;
+
+  @override
+
 
   @override
   Widget build(BuildContext context) {
@@ -183,146 +190,59 @@ class _MycharacterInformationScreenState extends State<MycharacterInformationScr
                   ),
                   RaisedButton(
                     onPressed: () async {
-                      switch(dropdownClassValue){  // switch case can be optimased
-                        case 'Bard':
-                          await dbOfClasses.collection('classes').doc('bard').get().then((value) => 
-                            setState((){
-                              List babArray = value.data()['BAB'];
-                              bab = babArray[snapshot.data['Lvl']];
-                              fortitude = value.data()['FORTITUDE'][snapshot.data['Lvl']];
-                              reflex = value.data()['REFLEX'][snapshot.data['Lvl']];
-                              will = value.data()['WILL'][snapshot.data['Lvl']];
-                            })
-                          );
-
-                          levelUpCharacter(snapshot.data['Lvl'], _modifier(snapshot.data['INT'])+6+ snapshot.data['SKILL_RANKS']); // should probably inv this function one time and make another var skillRanks
-                        break;
-                        case 'Barbarian':
-                          await dbOfClasses.collection('classes').doc('barbarian').get().then((value) => 
-                            setState((){
-                              List babArray = value.data()['BAB'];
-                              bab = babArray[snapshot.data['Lvl']];
-                              fortitude = value.data()['FORTITUDE'][snapshot.data['Lvl']];
-                              reflex = value.data()['REFLEX'][snapshot.data['Lvl']];
-                              will = value.data()['WILL'][snapshot.data['Lvl']];
-                            })
-                          );
-                          levelUpCharacter(snapshot.data['Lvl'], _modifier(snapshot.data['INT'])+4+ snapshot.data['SKILL_RANKS']);
-                        break;
-                        case 'Cleric':
-                          await dbOfClasses.collection('classes').doc('cleric').get().then((value) => 
-                            setState((){
-                              List babArray = value.data()['BAB'];
-                              bab = babArray[snapshot.data['Lvl']];
-                              fortitude = value.data()['FORTITUDE'][snapshot.data['Lvl']];
-                              reflex = value.data()['REFLEX'][snapshot.data['Lvl']];
-                              will = value.data()['WILL'][snapshot.data['Lvl']];
-                            })
-                          );
-                          levelUpCharacter(snapshot.data['Lvl'], _modifier(snapshot.data['INT'])+2+ snapshot.data['SKILL_RANKS']);
-                        break;
-                        case 'Druid':
-                          await dbOfClasses.collection('classes').doc('druid').get().then((value) => 
-                            setState((){
-                              List babArray = value.data()['BAB'];
-                              bab = babArray[snapshot.data['Lvl']];
-                              fortitude = value.data()['FORTITUDE'][snapshot.data['Lvl']];
-                              reflex = value.data()['REFLEX'][snapshot.data['Lvl']];
-                              will = value.data()['WILL'][snapshot.data['Lvl']];
-                            })
-                          );
-                          levelUpCharacter(snapshot.data['Lvl'], _modifier(snapshot.data['INT'])+4+ snapshot.data['SKILL_RANKS']);
-                        break;
-                        case 'Fighter':
-                          await dbOfClasses.collection('classes').doc('fighter').get().then((value) => 
-                            setState((){
-                              List babArray = value.data()['BAB'];
-                              bab = babArray[snapshot.data['Lvl']];
-                              fortitude = value.data()['FORTITUDE'][snapshot.data['Lvl']];
-                              reflex = value.data()['REFLEX'][snapshot.data['Lvl']];
-                              will = value.data()['WILL'][snapshot.data['Lvl']];
-                            })
-                          );
-                          levelUpCharacter(snapshot.data['Lvl'], _modifier(snapshot.data['INT'])+2+ snapshot.data['SKILL_RANKS']);
-                        break;
-                        case 'Monk':
-                          await dbOfClasses.collection('classes').doc('monk').get().then((value) => 
-                            setState((){
-                              List babArray = value.data()['BAB'];
-                              bab = babArray[snapshot.data['Lvl']];
-                              fortitude = value.data()['FORTITUDE'][snapshot.data['Lvl']];
-                              reflex = value.data()['REFLEX'][snapshot.data['Lvl']];
-                              will = value.data()['WILL'][snapshot.data['Lvl']];
-                            })
-                          );
-                          levelUpCharacter(snapshot.data['Lvl'], _modifier(snapshot.data['INT'])+4+ snapshot.data['SKILL_RANKS']);
-                        break;
-                        case 'Paladin':
-                          await dbOfClasses.collection('classes').doc('paladin').get().then((value) => 
-                            setState((){
-                              List babArray = value.data()['BAB'];
-                              bab = babArray[snapshot.data['Lvl']];
-                              fortitude = value.data()['FORTITUDE'][snapshot.data['Lvl']];
-                              reflex = value.data()['REFLEX'][snapshot.data['Lvl']];
-                              will = value.data()['WILL'][snapshot.data['Lvl']];
-                            })
-                          );
-                          levelUpCharacter(snapshot.data['Lvl'], _modifier(snapshot.data['INT'])+2+ snapshot.data['SKILL_RANKS']);
-                        break;
-                        case 'Ranger':
-                          await dbOfClasses.collection('classes').doc('ranger').get().then((value) => 
-                            setState((){
-                              List babArray = value.data()['BAB'];
-                              bab = babArray[snapshot.data['Lvl']];
-                              fortitude = value.data()['FORTITUDE'][snapshot.data['Lvl']];
-                              reflex = value.data()['REFLEX'][snapshot.data['Lvl']];
-                              will = value.data()['WILL'][snapshot.data['Lvl']];
-                            })
-                          );
-                          levelUpCharacter(snapshot.data['Lvl'], _modifier(snapshot.data['INT'])+6+ snapshot.data['SKILL_RANKS']);
-                        break;
-                        case 'Rogue':
-                          await dbOfClasses.collection('classes').doc('rogue').get().then((value) => 
-                            setState((){
-                              List babArray = value.data()['BAB'];
-                              bab = babArray[snapshot.data['Lvl']];
-                              fortitude = value.data()['FORTITUDE'][snapshot.data['Lvl']];
-                              reflex = value.data()['REFLEX'][snapshot.data['Lvl']];
-                              will = value.data()['WILL'][snapshot.data['Lvl']];
-                            })
-                          );
-                          levelUpCharacter(snapshot.data['Lvl'], _modifier(snapshot.data['INT'])+8+ snapshot.data['SKILL_RANKS']);
-                        break;
-                        case 'Sorcerer':
-                          await dbOfClasses.collection('classes').doc('sorcerer').get().then((value) => 
-                            setState((){
-                              List babArray = value.data()['BAB'];
-                              bab = babArray[snapshot.data['Lvl']];
-                              fortitude = value.data()['FORTITUDE'][snapshot.data['Lvl']];
-                              reflex = value.data()['REFLEX'][snapshot.data['Lvl']];
-                              will = value.data()['WILL'][snapshot.data['Lvl']];
-                            })
-                          );
-                          levelUpCharacter(snapshot.data['Lvl'], _modifier(snapshot.data['INT'])+2+ snapshot.data['SKILL_RANKS']);
-                        break;
-                        case 'Wizard':
-                          await dbOfClasses.collection('classes').doc('wizard').get().then((value) => 
-                            setState((){
-                              List babArray = value.data()['BAB'];
-                              bab = babArray[snapshot.data['Lvl']];
-                              fortitude = value.data()['FORTITUDE'][snapshot.data['Lvl']];
-                              reflex = value.data()['REFLEX'][snapshot.data['Lvl']];
-                              will = value.data()['WILL'][snapshot.data['Lvl']];
-                            })
-                          );
-                          levelUpCharacter(snapshot.data['Lvl'], _modifier(snapshot.data['INT'])+2+ snapshot.data['SKILL_RANKS']);
-                        break;
-                      }
-                    Navigator.pop(context);
-                    },
-                    child: Text('Level up', style: TextStyle(fontSize: 20)
+                      await dbOfClasses.collection('classes').doc(dropdownClassValue).get().then((value) => 
+                          setState((){
+                            List babArray = value.data()['BAB'];
+                            hitDice = value.data()['HIT_DICE'];
+                            bab = babArray[snapshot.data['Lvl']];
+                            fortitude = value.data()['FORTITUDE'][snapshot.data['Lvl']];
+                            reflex = value.data()['REFLEX'][snapshot.data['Lvl']];
+                            will = value.data()['WILL'][snapshot.data['Lvl']];
+                            skillPoints = value.data()['SKILL_POINTS'];
+                          })
+                        );
+                        levelUpCharacter(snapshot.data['Lvl'], snapshot.data['SKILL_RANKS'] + _modifier(snapshot.data['INT']) + skillPoints, _modifier(snapshot.data['CON']), snapshot.data['HP']);
+                      },
+                      child: Text('Level up', style: TextStyle(fontSize: 20)
+                      ),
+                    ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Card(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text('+ hit dice roll'),
+                        Radio(
+                          activeColor: Theme.of(context).primaryColor,
+                          value: 1,
+                          groupValue: _selectedRadio,
+                          onChanged: (val){
+                            selectedRadioHandle(val);
+                          }
+                        ),
+                      ],
                     ),
                   ),
+                  Card(
+                    child : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text('+ avarage dice'),
+                        Radio(
+                          activeColor: Theme.of(context).primaryColor,
+                          value: 2,
+                          groupValue: _selectedRadio,
+                          onChanged: (val){
+                            selectedRadioHandle(val);
+                          }
+                        ),
+                      ],
+                    ),
+                  )
                 ],
               ),
               Text('Some character bio', textAlign: TextAlign.center),
@@ -365,6 +285,12 @@ class _MycharacterInformationScreenState extends State<MycharacterInformationScr
     );
   }
 
+  selectedRadioHandle(int val){
+    setState((){
+      _selectedRadio = val;
+    });
+  }
+
   int _modifier (String val){
     if(val == null || val.isEmpty){
       return 0;
@@ -376,6 +302,7 @@ class _MycharacterInformationScreenState extends State<MycharacterInformationScr
       return (value - 11)~/2;
     }
   }
+
 
   Future<void> alert(){
     return showDialog<void>(
@@ -417,10 +344,17 @@ class _MycharacterInformationScreenState extends State<MycharacterInformationScr
     await FirebaseFirestore.instance.collection('characters').doc(widget.documentIndex).delete();
   }
 
-  void levelUpCharacter(int level, skillRanks) async{
+  void levelUpCharacter(int level, skillRanks, conMod, currentHp) async{
+    int hp;
     level++;
+    if(_selectedRadio == 1){
+      hp = Random().nextInt(hitDice) + conMod;
+    } else {
+      hp = hitDice~/2 + conMod;
+    }
     await FirebaseFirestore.instance.collection('characters').doc(widget.documentIndex).update({
       'Lvl' : level,
+      'HP' : hp + currentHp,
       'SKILL_RANKS': skillRanks,
       'BAB' : bab,
       'FORTITUDE': fortitude,
