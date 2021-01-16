@@ -32,16 +32,17 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
   
   final _formKey = GlobalKey<FormState>();
   
-  String dropdownClassValue = 'Bard';
+  String dropdownClassValue = 'bard';
   String dropdownRaceValue = 'Dwarf';
 
   List<int> listOfSkillRanks = List.filled(25, 0);
-  List<String> classes = ['Bard', 'Barbarian', 'Cleric', 'Druid','Fighter','Monk', 'Paladin', 'Ranger', 'Rogue', 'Sorcerer', 'Wizard'];
+  List<String> classes = ['bard', 'barbarian', 'cleric', 'druid','fighter','monk', 'paladin', 'ranger', 'rogue', 'sorcerer', 'wizzard'];
   List<String> races = ['Dwarf', 'Elf', 'Gnome', 'Half Elf','Half Orc','Halfling', 'Human'];
 
-  var _characterClass = Map();
+  Map _characterClass = {'hp': 0};
 
   final databaseReference = FirebaseFirestore.instance;
+  FirebaseFirestore dbOfClasses = FirebaseFirestore.instance;
 
   String _radioValue;
 
@@ -188,8 +189,8 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
               Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    print(racialStr.text);
                     if(_formKey.currentState.validate()){
+                      characterClass(dropdownClassValue);
                       alert();
                     }
                   },
@@ -367,7 +368,6 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
           TextButton(
             child: Text('Accept'),
             onPressed: () {
-              characterClass(dropdownClassValue);
               createRecord(nameController.text, dropdownRaceValue, dropdownClassValue);
               Navigator.of(context).pop();
               Navigator.pop(context);
@@ -385,55 +385,19 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
   );
   }
 
-  void characterClass(String className){
-    switch(className){
-      case 'Bard':
-        _characterClass = characterClassCreater(8,6,0,2,2,0);
-      break;
-      case 'Barbarian':
-        _characterClass = characterClassCreater(12,4,2,0,0,1);
-      break;
-      case 'Cleric':
-        _characterClass = characterClassCreater(8,2,2,0,2,0);
-      break;
-      case 'Druid':
-        _characterClass = characterClassCreater(8,4,2,0,2,0);
-      break;
-      case 'Fighter':
-        _characterClass = characterClassCreater(10,2,2,0,0,1);
-      break;
-      case 'Monk':
-        _characterClass = characterClassCreater(10,4,2,2,2,0);
-      break;
-      case 'Paladin':
-        _characterClass = characterClassCreater(10,2,2,0,2,1);
-      break;
-      case 'Ranger':
-        _characterClass = characterClassCreater(10,6,2,2,0,1);
-      break;
-      case 'Rogue':
-        _characterClass = characterClassCreater(8,8,0,2,0,0);
-      break;
-      case 'Sorcerer':
-        _characterClass = characterClassCreater(6,2,0,0,2,0);
-      break;
-      case 'Wizard':
-        _characterClass = characterClassCreater(6,2,0,0,2,0);
-      break;
-    }
-    return null;
-  }
-
-
-  Map characterClassCreater(int hp, skillRanks, fortitude, reflex, will, bab){
-    return {
-      'hp' : hp,
-      'skillRanks' : _modifier(intController.text)+skillRanks,
-      'fortitude' : fortitude,
-      'reflex' : reflex,
-      'will' : will,
-      'bab' : bab
-    };
+  void characterClass(String className) async{
+    await dbOfClasses.collection('classes').doc(className).get().then((value) => 
+      setState((){
+        _characterClass = {
+          'hp' : value.data()['HIT_DICE'],
+          'skillRanks' : value.data()['SKILL_POINTS'],
+          'fortitude' : value.data()['FORTITUDE'][0],
+          'reflex' : value.data()['REFLEX'][0],
+          'will' : value.data()['WILL'][0],
+          'bab' : value.data()['BAB'][0]
+        }; 
+      })
+    );
   }
 
   void createRecord(String name, race, characterClass) async {
@@ -445,7 +409,7 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
       'XP' : 0,
       'LEVEL_UP': true,
       'class': characterClass,
-      'HP': _characterClass['hp'] + _modifier(conController.text),
+      'HP': _characterClass['hp'] + _modifier(stringSum(conController.text, racialCon.text)),
       'SKILL_RANKS': _characterClass['skillRanks'],
       'SKILL_RANKS_LIST': listOfSkillRanks,
       'FORTITUDE': _characterClass['fortitude'],

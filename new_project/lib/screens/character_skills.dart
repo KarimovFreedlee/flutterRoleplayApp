@@ -149,7 +149,7 @@ class _MyCharacterSkillsScreenState extends State<MyCharacterSkillsScreen> {
   }
 
   Widget _totalBonus(int abilityMod, int ranks){
-    return Text((abilityMod+ranks).toString(),);
+    return Text((abilityMod+ranks).toString());
   }
   
   Widget _tableContainer(Widget child, {double height = 70,}){

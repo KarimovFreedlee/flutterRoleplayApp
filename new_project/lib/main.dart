@@ -28,7 +28,10 @@ class MyApp extends StatelessWidget {
         home: StreamBuilder(
           stream: FirebaseFirestore.instance.collection('characters').snapshots(),
           builder: (context, snapshot) {
-            if(!snapshot.hasData) return Text('loading data');
+            if(!snapshot.hasData) return SpinKitRotatingCircle(
+            color: Colors.white,
+            size: 50.0,
+          );
             return MyListOfCharactersScreen(
               title: 'Pathfinder characters list',
               charactersListView: new CharactersList(),
