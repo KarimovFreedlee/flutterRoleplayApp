@@ -3,9 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:new_project/index.dart';
 
 class MyCharacterScreen extends StatefulWidget {
-  MyCharacterScreen({this.name, this.documentIndex});
+  MyCharacterScreen({this.name, this.documentIndex, this.characterClass});
   final String name;
   final String documentIndex;
+  final String characterClass;
 
   @override
   _MyCharacterScreenState createState() => _MyCharacterScreenState();
@@ -34,7 +35,7 @@ class _MyCharacterScreenState extends State<MyCharacterScreen> {
   initState(){
     _widgetOptions = <Widget>[
       MyCharacterAbilitiesScreen(documentIndex: widget.documentIndex,),
-      MyCharacterSkillsScreen(documentIndex: widget.documentIndex,),
+      MyCharacterSkillsScreen(documentIndex: widget.documentIndex, characterClass: widget.characterClass),
       MycharacterInformationScreen(documentIndex: widget.documentIndex)
     ];
     super.initState();

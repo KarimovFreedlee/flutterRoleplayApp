@@ -106,7 +106,7 @@ class CharactersList extends StatelessWidget {
                         ],
                       ),
                       onTap: ()=>Navigator.push(context, MaterialPageRoute(
-                        builder: (BuildContext context) => MyCharacterScreen(name: document['name'], documentIndex: docId))),
+                        builder: (BuildContext context) => MyCharacterScreen(name: document['name'], documentIndex: docId, characterClass: document['class'],))),
                     ),
                   ],
                 ),

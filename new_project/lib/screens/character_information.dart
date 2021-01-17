@@ -201,7 +201,14 @@ class _MycharacterInformationScreenState extends State<MycharacterInformationScr
                             skillPoints = value.data()['SKILL_POINTS'];
                           })
                         );
-                        levelUpCharacter(snapshot.data['Lvl'], snapshot.data['SKILL_RANKS'] + _modifier(snapshot.data['INT']) + skillPoints, _modifier(snapshot.data['CON']), snapshot.data['HP']);
+                        if(snapshot.data['Lvl'] != 20){
+                          levelUpCharacter(
+                            snapshot.data['Lvl'], 
+                            snapshot.data['SKILL_RANKS'] + _modifier(snapshot.data['INT']) + skillPoints, 
+                            _modifier(snapshot.data['CON']), 
+                            snapshot.data['HP']
+                          );
+                        }
                       },
                       child: Text('Level up', style: TextStyle(fontSize: 20)
                       ),
