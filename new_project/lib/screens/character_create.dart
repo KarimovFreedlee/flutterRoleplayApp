@@ -39,7 +39,8 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
   List<String> classes = ['bard', 'barbarian', 'cleric', 'druid','fighter','monk', 'paladin', 'ranger', 'rogue', 'sorcerer', 'wizzard'];
   List<String> races = ['Dwarf', 'Elf', 'Gnome', 'Half Elf','Half Orc','Halfling', 'Human'];
 
-  Map _characterClass = {'hp': 0};
+  Map _characterClass;
+  Map mapOfClasses;
 
   final databaseReference = FirebaseFirestore.instance;
   FirebaseFirestore dbOfClasses = FirebaseFirestore.instance;
@@ -396,6 +397,9 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
           'will' : value.data()['WILL'][0],
           'bab' : value.data()['BAB'][0]
         }; 
+        mapOfClasses = {
+          '${className}' : 1
+        };
       })
     );
   }
@@ -409,8 +413,9 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
       'XP' : 0,
       'LEVEL_UP': true,
       'class': characterClass,
+      'CLASSES': mapOfClasses,
       'HP': _characterClass['hp'] + _modifier(stringSum(conController.text, racialCon.text)),
-      'SKILL_RANKS': _characterClass['skillRanks'],
+      'SKILL_RANKS': _characterClass['skillRanks'] + _modifier(stringSum(intController.text, racialInt.text)),
       'SKILL_RANKS_LIST': listOfSkillRanks,
       'FORTITUDE': _characterClass['fortitude'],
       'REFLEX' : _characterClass['reflex'],

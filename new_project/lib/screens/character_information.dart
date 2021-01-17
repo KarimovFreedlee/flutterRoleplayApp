@@ -20,11 +20,24 @@ class _MycharacterInformationScreenState extends State<MycharacterInformationScr
 
   String dropdownClassValue = 'bard';
   
-  int bab = 0, fortitude= 0 , reflex= 0, will = 0, hitDice, skillPoints ;
+  int bab, fortitude, reflex, will, hitDice, skillPoints ;
+  Map characterClasses;
 
   int _selectedRadio = 2;
 
-  @override
+ @override
+  void initState() {
+    FirebaseFirestore.instance.collection('characters').doc(widget.documentIndex).get().then((value) => {
+      setState((){
+        bab = value.data()['BAB'];
+        fortitude = value.data()['FORTITUDE'];
+        reflex = value.data()['REFLEX'];
+        will = value.data()['WILL'];
+        characterClasses = value.data()['CLASSES'];
+      })
+    });
+    super.initState();
+  }
 
 
   @override
@@ -55,14 +68,6 @@ class _MycharacterInformationScreenState extends State<MycharacterInformationScr
                         textAlign: TextAlign.center,
                       ),
                       Text(
-                        'Class:',
-                        textAlign: TextAlign.center,
-                      ),
-                      Text(
-                        '${snapshot.data['class']}',
-                        textAlign: TextAlign.center,
-                      ),
-                      Text(
                         'Level:',
                         textAlign: TextAlign.center,
                       ),
@@ -76,6 +81,24 @@ class _MycharacterInformationScreenState extends State<MycharacterInformationScr
                       ),
                       Text(
                         '${snapshot.data['XP']}',
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Card(
+                child: Container(
+                  height: 50,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text(
+                        'Character class:',
+                        textAlign: TextAlign.center,
+                      ),
+                      Text(
+                        '${snapshot.data['CLASSES']}',
                         textAlign: TextAlign.center,
                       ),
                     ],
@@ -192,15 +215,17 @@ class _MycharacterInformationScreenState extends State<MycharacterInformationScr
                     onPressed: () async {
                       await dbOfClasses.collection('classes').doc(dropdownClassValue).get().then((value) => 
                           setState((){
-                            List babArray = value.data()['BAB'];
+                            value.data()['BAB'][snapshot.data['Lvl']] > bab ? bab = value.data()['BAB'][snapshot.data['Lvl']] : bab = bab;
+                            value.data()['FORTITUDE'][snapshot.data['Lvl']] > fortitude ? fortitude = value.data()['FORTITUDE'][snapshot.data['Lvl']] : fortitude = fortitude;
+                            value.data()['REFLEX'][snapshot.data['Lvl']] > reflex ? reflex = value.data()['REFLEX'][snapshot.data['Lvl']] : reflex = reflex;
+                            value.data()['WILL'][snapshot.data['Lvl']] > will ? will = value.data()['WILL'][snapshot.data['Lvl']] : will = will;
                             hitDice = value.data()['HIT_DICE'];
-                            bab = babArray[snapshot.data['Lvl']];
-                            fortitude = value.data()['FORTITUDE'][snapshot.data['Lvl']];
-                            reflex = value.data()['REFLEX'][snapshot.data['Lvl']];
-                            will = value.data()['WILL'][snapshot.data['Lvl']];
                             skillPoints = value.data()['SKILL_POINTS'];
                           })
                         );
+                        setState((){
+                          characterClasses.containsKey(dropdownClassValue) ? characterClasses[dropdownClassValue] +=1 : characterClasses[dropdownClassValue] = 1;
+                        });
                         if(snapshot.data['Lvl'] != 20){
                           levelUpCharacter(
                             snapshot.data['Lvl'], 
@@ -367,7 +392,8 @@ class _MycharacterInformationScreenState extends State<MycharacterInformationScr
       'FORTITUDE': fortitude,
       'REFLEX' : reflex,
       'WILL': will,
-      'LEVEL_UP': true
+      'LEVEL_UP': true,
+      "CLASSES": characterClasses
       });
   }
 }

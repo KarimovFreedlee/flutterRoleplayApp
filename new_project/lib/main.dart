@@ -80,6 +80,7 @@ class CharactersList extends StatelessWidget {
                 child: Column(
                   children: [
                     Container(
+                      height: 25,
                       decoration: BoxDecoration(
                         color: Theme.of(context).primaryColor,
                         borderRadius: BorderRadius.vertical(

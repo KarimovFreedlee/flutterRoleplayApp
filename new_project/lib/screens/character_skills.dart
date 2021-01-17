@@ -7,7 +7,7 @@ import 'package:new_project/index.dart';
 class MyCharacterSkillsScreen extends StatefulWidget {
 
   final String documentIndex;
-  final String characterClass;
+  final String characterClass; // with 2 streams i can remove it to state
   const MyCharacterSkillsScreen({Key key, this.documentIndex, this.characterClass}) : super(key: key);
   @override
   _MyCharacterSkillsScreenState createState() => _MyCharacterSkillsScreenState();
