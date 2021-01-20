@@ -28,7 +28,7 @@ class _MyCharacterAbilitiesScreenState extends State<MyCharacterAbilitiesScreen>
   Widget build(BuildContext context) {
     return StreamBuilder(
       // ignore: deprecated_member_use
-      stream: FirebaseFirestore.instance.collection('characters').document(widget.documentIndex).snapshots(),
+      stream: FirebaseFirestore.instance.collection('characters').doc(widget.documentIndex).snapshots(),
       builder: (context, snapshot) {
         if(!snapshot.hasData) return SpinKitFadingCircle(
           color: Colors.white,

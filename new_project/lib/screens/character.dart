@@ -55,7 +55,7 @@ class _MyCharacterScreenState extends State<MyCharacterScreen> {
       ),
       body: StreamBuilder(
         // ignore: deprecated_member_use
-        stream: FirebaseFirestore.instance.collection('characters').document(widget.documentIndex).snapshots(),
+        stream: FirebaseFirestore.instance.collection('characters').doc(widget.documentIndex).snapshots(),
         builder: (context, snapshot) {
           if(!snapshot.hasData) return SpinKitRotatingCircle(
             color: Colors.white,

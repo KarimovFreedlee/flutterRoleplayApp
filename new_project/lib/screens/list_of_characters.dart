@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:new_project/index.dart';
+import 'package:provider/provider.dart';
 
 class MyListOfCharactersScreen extends StatefulWidget {
   MyListOfCharactersScreen({Key key, this.title, this.charactersListView}) : super(key: key);
@@ -16,6 +17,15 @@ class _MyListOfCharactersScreenState extends State<MyListOfCharactersScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: [
+           IconButton(
+            icon: const Icon(Icons.logout),
+            tooltip: 'Log out',
+            onPressed: () {
+              context.read<AuthenticationService>().signOut();
+            },
+          ),
+        ],
       ),
       body: Container(
         child: Center(

@@ -2,6 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:new_project/index.dart';
+import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,19 +15,41 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          brightness: Brightness.dark,
-          primaryColor: Colors.orange[200],
-          accentColor: Color(0xff3f2318),
-          elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ElevatedButton.styleFrom(
-              primary: Colors.orange[200],
-            ),
+    return MultiProvider(
+      providers: [
+        Provider<AuthenticationService>(
+          create: (_) => AuthenticationService(FirebaseAuth.instance),
+        ),
+        StreamProvider(
+          create: (context) => context.read<AuthenticationService>().authStateChanges,
+        )
+      ],
+      child: MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        brightness: Brightness.dark,
+        primaryColor: Colors.orange[200],
+        accentColor: Color(0xff3f2318),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            primary: Colors.orange[200],
           ),
         ),
-        home: StreamBuilder(
+      ),
+      home: AuthenticationWrapper() 
+      ),
+    );
+  }
+}
+
+
+class AuthenticationWrapper extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final firebaseUser = context.watch<User>();
+
+    if (firebaseUser != null) {
+      return StreamBuilder(
           stream: FirebaseFirestore.instance.collection('characters').snapshots(),
           builder: (context, snapshot) {
             if(!snapshot.hasData) return SpinKitRotatingCircle(
@@ -35,10 +59,11 @@ class MyApp extends StatelessWidget {
             return MyListOfCharactersScreen(
               title: 'Pathfinder characters list',
               charactersListView: new CharactersList(),
-              );
-          }
-        ),
-    );
+          );
+        }
+      );
+    }
+    return SignInPage();
   }
 }
 
@@ -66,10 +91,8 @@ class CharactersList extends StatelessWidget {
             size: 50.0,
           );
         return ListView(
-          // ignore: deprecated_member_use
-          children: snapshot.data.documents.map((document) {
-            // ignore: deprecated_member_use
-            var docId=document.documentID;
+          children: snapshot.data.docs.map((document) {
+            var docId=document.id;
             return Padding(
               padding: const EdgeInsets.all(3.0),
               child: Card(
