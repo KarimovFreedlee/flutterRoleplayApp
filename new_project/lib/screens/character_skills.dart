@@ -1,14 +1,13 @@
-import 'dart:typed_data';
-import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:new_project/index.dart';
 
-class MyCharacterSkillsScreen extends StatefulWidget {
 
+class MyCharacterSkillsScreen extends StatefulWidget {
+  final String userDocumentIndex;
   final String documentIndex;
   final String characterClass; // with 2 streams i can remove it to state
-  const MyCharacterSkillsScreen({Key key, this.documentIndex, this.characterClass}) : super(key: key);
+  const MyCharacterSkillsScreen({Key key, this.documentIndex, this.userDocumentIndex, this.characterClass}) : super(key: key);
   @override
   _MyCharacterSkillsScreenState createState() => _MyCharacterSkillsScreenState();
 }
@@ -24,7 +23,7 @@ class _MyCharacterSkillsScreenState extends State<MyCharacterSkillsScreen> {
   
 
   initState() {
-    FirebaseFirestore.instance.collection('characters').doc(widget.documentIndex).get().then((value) => 
+    FirebaseFirestore.instance.collection('users').doc(widget.userDocumentIndex).collection('characters').doc(widget.documentIndex).get().then((value) => 
       setState((){
         availableRanks = value.data()['SKILL_RANKS'];
       })
@@ -51,7 +50,7 @@ class _MyCharacterSkillsScreenState extends State<MyCharacterSkillsScreen> {
             size: 50.0,
           );
         return  StreamBuilder(
-        stream: db.collection('characters').doc(widget.documentIndex).snapshots(),
+        stream: db.collection('users').doc(context.watch<AuthenticationService>().getUid()).collection('characters').doc(widget.documentIndex).snapshots(),
         builder: (context, snapshot) {
           if(!snapshot.hasData) return SpinKitFadingCircle(
             color: Colors.white,

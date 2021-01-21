@@ -3,8 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:new_project/index.dart';
 
 class MyCharacterScreen extends StatefulWidget {
-  MyCharacterScreen({this.name, this.documentIndex, this.characterClass});
+  MyCharacterScreen({this.name, this.documentIndex, this.userDocumentIndex, this.characterClass});
   final String name;
+  final String userDocumentIndex;
   final String documentIndex;
   final String characterClass;
 
@@ -35,7 +36,7 @@ class _MyCharacterScreenState extends State<MyCharacterScreen> {
   initState(){
     _widgetOptions = <Widget>[
       MyCharacterAbilitiesScreen(documentIndex: widget.documentIndex,),
-      MyCharacterSkillsScreen(documentIndex: widget.documentIndex, characterClass: widget.characterClass),
+      MyCharacterSkillsScreen(documentIndex: widget.documentIndex, userDocumentIndex: widget.userDocumentIndex, characterClass: widget.characterClass),
       MycharacterInformationScreen(documentIndex: widget.documentIndex)
     ];
     super.initState();
@@ -55,7 +56,7 @@ class _MyCharacterScreenState extends State<MyCharacterScreen> {
       ),
       body: StreamBuilder(
         // ignore: deprecated_member_use
-        stream: FirebaseFirestore.instance.collection('characters').doc(widget.documentIndex).snapshots(),
+        stream: FirebaseFirestore.instance.collection('users').doc(context.watch<AuthenticationService>().getUid()).collection('characters').doc(widget.documentIndex).snapshots(),
         builder: (context, snapshot) {
           if(!snapshot.hasData) return SpinKitRotatingCircle(
             color: Colors.white,

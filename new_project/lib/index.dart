@@ -9,3 +9,4 @@ export 'screens/character_information.dart';
 export 'screens/login_screen.dart';
 export 'authentication_service.dart';
 export 'package:flutter_spinkit/flutter_spinkit.dart';
+export 'package:provider/provider.dart';

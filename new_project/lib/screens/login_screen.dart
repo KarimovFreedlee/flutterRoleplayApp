@@ -9,33 +9,55 @@ class SignInPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          TextField(
-            controller: emailController,
-            keyboardType: TextInputType.emailAddress,
-            decoration: InputDecoration(
-              labelText: "Email",
+      body: Padding(
+        padding: const EdgeInsets.all(18.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextField(
+              controller: emailController,
+              keyboardType: TextInputType.emailAddress,
+              decoration: InputDecoration(
+                labelText: "Email",
+              ),
             ),
-          ),
-          TextField(
-            controller: passwordController,
-            decoration: InputDecoration(
-              labelText: "Password",
+            TextField(
+              controller: passwordController,
+              keyboardType: TextInputType.visiblePassword,
+              decoration: InputDecoration(
+                labelText: "Password",
+              ),
             ),
-          ),
-          RaisedButton(
-            color: Theme.of(context).primaryColor,
-            onPressed: () {
-              context.read<AuthenticationService>().signIn(
-                    email: emailController.text.trim(),
-                    password: passwordController.text.trim(),
-                  );
-            },
-            child: Text("Sign in"),
-          )
-        ],
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  RaisedButton(
+                    color: Theme.of(context).primaryColor,
+                    onPressed: () {
+                      context.read<AuthenticationService>().signIn(
+                        email: emailController.text.trim(),
+                        password: passwordController.text.trim(),
+                      );
+                    },
+                    child: Text("Sign in"),
+                  ),
+                  RaisedButton(
+                    color: Theme.of(context).primaryColor,
+                    onPressed: () {
+                      context.read<AuthenticationService>().signUp(
+                        email: emailController.text.trim(),
+                        password: passwordController.text.trim(),
+                      );
+                    },
+                    child: Text("Sign Up"),
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

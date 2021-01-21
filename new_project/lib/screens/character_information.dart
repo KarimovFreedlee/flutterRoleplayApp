@@ -43,7 +43,7 @@ class _MycharacterInformationScreenState extends State<MycharacterInformationScr
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: FirebaseFirestore.instance.collection('characters').doc(widget.documentIndex).snapshots(),
+      stream: FirebaseFirestore.instance.collection('users').doc(context.watch<AuthenticationService>().getUid()).collection('characters').doc(widget.documentIndex).snapshots(),
       builder: (context, snapshot) {
         if(!snapshot.hasData) return SpinKitFadingCircle(
           color: Colors.white,

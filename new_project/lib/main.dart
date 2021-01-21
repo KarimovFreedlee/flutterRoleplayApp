@@ -48,16 +48,16 @@ class AuthenticationWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     final firebaseUser = context.watch<User>();
 
-    if (firebaseUser != null) {
+    if (firebaseUser != null && firebaseUser.uid != null) {
       return StreamBuilder(
-          stream: FirebaseFirestore.instance.collection('characters').snapshots(),
+          stream: FirebaseFirestore.instance.collection('users').doc(firebaseUser.uid).collection('characters').snapshots(),
           builder: (context, snapshot) {
             if(!snapshot.hasData) return SpinKitRotatingCircle(
             color: Colors.white,
             size: 50.0,
           );
             return MyListOfCharactersScreen(
-              title: 'Pathfinder characters list',
+              title: 'My Pathfinder characters list',
               charactersListView: new CharactersList(),
           );
         }
@@ -84,7 +84,7 @@ class CharactersList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: FirebaseFirestore.instance.collection('characters').snapshots(),
+      stream: FirebaseFirestore.instance.collection('users').doc(context.watch<AuthenticationService>().getUid()).collection('characters').snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (!snapshot.hasData) return SpinKitRotatingCircle(
             color: Colors.white,
@@ -130,7 +130,7 @@ class CharactersList extends StatelessWidget {
                         ],
                       ),
                       onTap: ()=>Navigator.push(context, MaterialPageRoute(
-                        builder: (BuildContext context) => MyCharacterScreen(name: document['name'], documentIndex: docId, characterClass: document['class'],))),
+                        builder: (BuildContext context) => MyCharacterScreen(name: document['name'], documentIndex: docId, userDocumentIndex: context.watch<AuthenticationService>().getUid(), characterClass: document['class'],))),
                     ),
                   ],
                 ),

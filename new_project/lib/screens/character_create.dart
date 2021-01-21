@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:new_project/index.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:form_validator/form_validator.dart';
+import 'package:provider/provider.dart';
 
 class MyCharacterCreateScreen extends StatefulWidget {
   MyCharacterCreateScreen();
@@ -405,7 +406,7 @@ class _MyCharacterCreateScreenState extends State<MyCharacterCreateScreen> {
   }
 
   void createRecord(String name, race, characterClass) async {
-    await databaseReference.collection("characters")
+    await databaseReference.collection('users').doc(context.read<AuthenticationService>().getUid()).collection("characters")
     .add({
       'name': name,
       'race': race,
